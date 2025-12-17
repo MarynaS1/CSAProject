@@ -1,3 +1,42 @@
-body{
-  background: blue;
+body {
+  background: #242424;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  
+}
+p {
+  color: white;
+  overflow-wrap: break-word;
+  margin: 10px;
+}
+
+#game{
+  display: flex;
+  border-style: solid;
+  border-color: gray;
+  padding: 10px;
+  width:50%;
+  justify-content: space-around;
+  margin-top: 20%;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+#text-action{
+  max-width: 500px;
+  min-width: 20px;
+  margin-right: 10px;
+  flex-shrink: 3;
+  flex-grow: 1;
+}
+#text{
+  text-align: left;
+  border-style: solid;
+  border-color: gray;
+}
+#map-move{
+  max-width: 500px;
+  min-width: 20px;
+  flex-shrink: 1;
+  flex-grow: 1;
 }

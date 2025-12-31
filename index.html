@@ -9,8 +9,12 @@
   <body>
     <div id="game">
       <div id="text-action">
-        <div id="text">
-          <p>TEXT PLACEHOLDER RRRRRRRRRRRRRRRRRR RRRRRRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR RRRRRRRRRRRRR</p>
+        <div id="game-container">
+          <div id="output"></div>
+        </div>
+        <div class="user-input-area">
+          <input type="text" id="user-input" placeholder="..." autofocus autocomplete="off">
+          <button onclick="handleInput()">Submit</button>
         </div>
         <div id="actions">
           <p>ACTION</p>
@@ -29,5 +33,509 @@
         </div>
       </div>
     </div>
+    <script>
+    // Gonna have to fix this ai bs later
+    // --- GAME VARIABLES (STATE) ---
+    // These replace the local variables in your Java Main method
+    let gameState = {
+        section: 1, // 1 = Intro, 2 = House, 3 = Host
+        subState: "start", // used for pauses like scan.nextLine()
+        inventory: [],
+        keys: [],
+        room: "bedroom",
+        time: 0, // Will be randomized in init
+        survivalPoints: 0,
+        
+        // Flags
+        seenIntroOne: false,
+        seenIntroTwo: false,
+        
+        // Room Check Counts
+        bedroomCheck: 0,
+        officeCheck: 0,
+        trophyCheck: 0,
+        kitchenCheck: 0,
+        
+        // Unlocks
+        officeUnlocked: false,
+        trophyUnlocked: false,
+        entranceUnlocked: false,
+        
+        // Descriptions seen
+        officeSeen: false,
+        corridorSeen: false,
+        kitchenSeen: false,
+        entranceSeen: false,
+        trophySeen: false,
+
+        // Traps
+        makingTrap: false,
+        
+        // Host Section
+        reachedExit: false,
+        playerActions: 2,
+        hostRoom: "none",
+        injuries: 0
+    };
+
+    // --- UTILITY FUNCTIONS ---
+    
+    const outputDiv = document.getElementById('output');
+    const inputField = document.getElementById('user-input');
+
+    function print(text) {
+        // Appends text to the div
+        outputDiv.innerHTML += text + "\n";
+        // Auto scroll to bottom
+        document.getElementById('game-container').scrollTop = document.getElementById('game-container').scrollHeight;
+    }
+
+    function startGame() {
+        // Init Section 1
+        gameState.inventory = [];
+        gameState.keys = [];
+        print("You wake up in an unfamiliar shack. You don’t remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
+        print("[Type in the number of the option given to you to choose it. To see available options again, type \"actions\". If you're not asked for input, press enter to see the next section.]\n");
+        print("1. Look around\n2. Examine yourself\n");
+    }
+
+    // Handle Enter Key
+    inputField.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            handleInput();
+        }
+    });
+
+    // --- MAIN LOGIC ---
+
+    function handleInput() {
+        let input = inputField.value.trim().toLowerCase();
+        inputField.value = ""; // Clear input
+        print("> " + input); // Echo user input
+
+        // --- SECTION 1: INTRO ---
+        if (gameState.section === 1) {
+            
+            if (gameState.subState === "pausing") {
+                // This mimics the 'scan.nextLine()' used purely for pausing
+                gameState.section = 2;
+                initSection2();
+                return;
+            }
+
+            if (input === "1") {
+                print("\nThe shack is well lit with the still burning fireplace. The windows show only a blizzard. On the bedside table you see some food, as well as a fork and a knife. How nice of them.\n");
+                gameState.seenIntroOne = true;
+                if (gameState.seenIntroTwo) {
+                    print("The knife seems somewhat sharp. The same can’t be said about whoever left you here. You take the knife and start cutting the rope...\n");
+                    print("[Press Enter to continue]");
+                    gameState.subState = "pausing";
+                }
+            }
+            else if (input === "2") {
+                print("You seemed to be tied with a rope to the leg of the bed you're laying on. Not the best first impression of whoever found you. You think you should probably try to avoid an in-person meeting with them.\n");
+                gameState.seenIntroTwo = true;
+                if (gameState.seenIntroOne) {
+                    print("Wait, wasn’t there a knife nearby? You wonder if it could cut the rope.\n");
+                }
+            }
+            else if (input === "actions" || input === "help") {
+                print("Available actions:\n1. Look around\n2. Examine yourself\n");
+            }
+            else if (input === "exit") {
+                print("SECTION EXITED");
+                gameState.section = 2;
+                initSection2();
+            }
+            else {
+                print("Not an option.\n");
+            }
+        }
+
+        // --- SECTION 2: THE HOUSE ---
+        else if (gameState.section === 2) {
+            
+            // Check trap making state first
+            if (gameState.makingTrap) {
+                handleTrapInput(input);
+                return;
+            }
+
+            // Check Time
+            if (gameState.time <= 0) {
+                print("\nIt seems you are out of time...");
+                gameState.section = 3;
+                initSection3();
+                return;
+            }
+
+            if (input === "look") {
+                handleLook();
+            }
+            else if (input === "actions" || input === "action" || input === "help") {
+                showActions();
+            }
+            else if (input === "move") {
+                print("\nChoose a room to move to:");
+                print("Stay");
+                if (gameState.room === "bedroom") {
+                    print("Corridor");
+                    if (gameState.officeUnlocked) print("Office");
+                } else if (gameState.room === "office") {
+                    print("Bedroom");
+                } else if (gameState.room === "corridor") {
+                    print("Bedroom\nEntrance room\nKitchen");
+                    if (gameState.trophyUnlocked) print("Trophy room");
+                } else if (gameState.room === "entrance") {
+                    print("Corridor");
+                    if (gameState.entranceUnlocked) print("Outside");
+                } else if (gameState.room === "kitchen" || gameState.room === "trophy") {
+                    print("Corridor");
+                }
+                gameState.subState = "moving"; // Expect next input to be a room
+            }
+            // Handle the actual movement input
+            else if (gameState.subState === "moving") {
+                handleMovement(input);
+                gameState.subState = ""; // Reset
+            }
+            else if (input === "inventory") {
+                print("Inventory: " + gameState.inventory.join(", "));
+            }
+            else if (input === "keys" || input === "key") {
+                print("Keys: " + gameState.keys.join(", "));
+            }
+            else if (input === "unlock") {
+                handleUnlock();
+            }
+            else if (input === "trap" || input === "traps") {
+                initTrap();
+            }
+            // Specific Actions
+            else if (input === "rope") {
+                 if (gameState.inventory.includes("sharp knife")) {
+                    print("You cut the rope with the sharp knife.");
+                    gameState.inventory.push("rope");
+                    gameState.time -= 1;
+                } else {
+                    print("You cut the rope with the small knife.");
+                    gameState.inventory.push("rope");
+                    gameState.time -= 5;
+                }
+            }
+            else if ((input === "firewood" || input === "fire wood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
+                print("You tied the firewood together with the rope. Now you can carry it.");
+                gameState.inventory.push("firewood");
+            }
+            else if (input === "exit") {
+                // Debug exit
+                print("SECTION EXITED");
+                gameState.section = 3;
+                initSection3();
+            }
+            else if (input === "moretime") {
+                gameState.time = 360;
+                print("Time set to 360.");
+            }
+            else {
+                print("Not an option.\n");
+            }
+        }
+
+        // --- SECTION 3: THE HOST ---
+        else if (gameState.section === 3) {
+            // Note: The provided code cut off in the middle of this logic.
+            // I have implemented the structure based on what was provided.
+            
+            if (input === "actions" || input === "help") {
+                let actions = "\nAvailable actions:\n\"Move\" - Choose a room to move to. \n\"Inventory\" - Check to see what your inventory contains.\n\"Keys\" - Check what keys you have.\n\"Attack\" - Attack the host with a weapon.\n\"Hide\" - Hide from the host.\n\"Wait\" - Skip one action.";
+                print(actions);
+            } 
+            else if (input === "move") {
+                // Basic move prompt from Section 3
+                 print("\nChoose a room to move to (Stay, Bedroom, Corridor, etc):");
+                 gameState.subState = "section3_moving";
+            }
+            else if (gameState.subState === "section3_moving") {
+                handleMovement(input); // Reusing logic for now
+                gameState.playerActions--;
+                gameState.subState = "";
+                checkTurn();
+            }
+            else if (input === "wait") {
+                print("You wait.");
+                gameState.playerActions--;
+                checkTurn();
+            }
+            else {
+                print("Action not recognized or not implemented yet.");
+            }
+        }
+    }
+
+    // --- HELPER LOGIC FUNCTIONS ---
+
+    function initSection2() {
+        print("After some time you manage to free yourself. The wind is howling outside. The blizzard seems to have worsened since you got here. Even if you get out of the house, you would need some supplies to simply not die of the cold, not to mention even finding your way. You think you can \"borrow\" some stuff from this property before their owner comes back, whenever that is...\n");
+        print("[Press Enter]"); // Pausing for effect
+        
+        print("\nSECTION 2: THE HOUSE\n");
+        gameState.time = Math.floor(Math.random() * 31) + 10;
+        print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
+        
+        gameState.inventory.push("food");
+        gameState.inventory.push("Small knife");
+        print("(Tutorial: You have " + gameState.time + " min before host returns. Type \"actions\" to see options.)");
+    }
+
+    function handleLook() {
+        if (gameState.room === "bedroom") {
+            if (gameState.bedroomCheck === 0) {
+                print("You have found an entrance key, lighter, and some firewood. You cannot get firewood yet, because you need rope.");
+                gameState.keys.push("entrance key");
+                gameState.inventory.push("lighter");
+                gameState.bedroomCheck++;
+                gameState.time -= 5;
+                gameState.survivalPoints += 1;
+            } else {
+                print("Nothing to look for here.");
+            }
+        }
+        else if (gameState.room === "office") {
+            if (gameState.officeCheck === 0) {
+                print("You have found a trophy room key, a fishing rod and bait.");
+                gameState.keys.push("trophy room key");
+                gameState.inventory.push("fishing rod");
+                gameState.inventory.push("bait");
+                gameState.officeCheck++;
+                gameState.time -= 5;
+                gameState.survivalPoints += 2;
+            } else if (gameState.officeCheck === 1) {
+                print("You have found paper, a map, and a firearm locker key.");
+                gameState.inventory.push("paper");
+                gameState.inventory.push("map of the surroundings");
+                gameState.keys.push("firearm locker key");
+                gameState.officeCheck++;
+                gameState.time -= 5;
+                gameState.survivalPoints += 3;
+            } else {
+                print("Nothing to look for here.");
+            }
+        }
+        else if (gameState.room === "trophy") {
+             if (gameState.trophyCheck === 0) {
+                 print("You found a firearm locker (needs key) and a taxidermied fox? You think you can use it for a trap.");
+                 gameState.inventory.push("taxidermied fox?");
+                 gameState.trophyCheck++;
+                 gameState.time -= 6;
+             } else {
+                 print("Nothing else here.");
+             }
+        }
+        else if (gameState.room === "kitchen") {
+            if (gameState.kitchenCheck === 0) {
+                print("You found an office key and a sharp knife.");
+                gameState.inventory.push("sharp knife");
+                gameState.keys.push("office key");
+                gameState.kitchenCheck++;
+                gameState.time -= 5;
+                gameState.survivalPoints += 2;
+            } else if (gameState.kitchenCheck === 1) {
+                print("You found bottled water and raw meat.");
+                if(gameState.inventory.includes("firewood")) {
+                    print("You think you could cook it with the firewood.");
+                    gameState.survivalPoints += 2;
+                }
+                gameState.inventory.push("bottled water");
+                gameState.inventory.push("raw meat");
+                gameState.kitchenCheck++;
+                gameState.time -= 5;
+                gameState.survivalPoints += 1;
+            } else {
+                print("Nothing else here.");
+            }
+        }
+        else {
+            print("Nothing to look for here.");
+        }
+    }
+
+    function showActions() {
+        print("\nAvailable actions:\n\"Look\" - [5 min] Search room.\n\"Move\" - Change room.\n\"Trap\" - [10 min] Place trap.\n\"Inventory\"\n\"Keys\"");
+        if (gameState.room === "bedroom") {
+            if (gameState.inventory.includes("sharp knife")) print("\"Rope\" - [1min] Cut rope.");
+            else print("\"Rope\" - [5min] Cut rope.");
+            if (gameState.bedroomCheck === 1) print("\"Firewood\" - [3min] get firewood (needs rope).");
+            if (gameState.keys.includes("office key")) print("\"Unlock\" - Unlock office.");
+        }
+        if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) print("\"Unlock\" - Unlock trophy room.");
+        if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1) print("\"Unlock\" - Unlock firearm locker.");
+        if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) print("\"Unlock\" - Unlock entrance.");
+    }
+
+    function handleMovement(dest) {
+        dest = dest.toLowerCase();
+        
+        // Boilerplate movement logic
+        if (dest === "stay") {
+             print("You stayed in the same room.\n");
+             return;
+        }
+
+        let moved = false;
+        
+        if (dest === "bedroom") {
+            if (["corridor", "office", "bedroom"].includes(gameState.room)) {
+                gameState.room = "bedroom";
+                print("You moved to the bedroom.");
+                moved = true;
+            }
+        }
+        else if (dest === "corridor") {
+            if (["bedroom", "trophy", "kitchen", "entrance", "corridor"].includes(gameState.room)) {
+                gameState.room = "corridor";
+                print("You moved to the corridor.");
+                if (!gameState.corridorSeen) {
+                    print("The corridor is dark. 4 doors, all labeled.");
+                    gameState.corridorSeen = true;
+                }
+                moved = true;
+            }
+        }
+        else if (dest === "office") {
+            if (gameState.officeUnlocked && ["bedroom", "office"].includes(gameState.room)) {
+                gameState.room = "office";
+                print("You moved to the office.");
+                if (!gameState.officeSeen) {
+                    print("Smell of dust and papers. Hunting equipment.");
+                    gameState.officeSeen = true;
+                }
+                moved = true;
+            }
+        }
+        else if (dest === "trophy" || dest === "trophy room") {
+            if (gameState.trophyUnlocked && ["corridor", "trophy"].includes(gameState.room)) {
+                gameState.room = "trophy";
+                print("You moved to the trophy room.");
+                if (!gameState.trophySeen) {
+                    print("Mounted animal heads everywhere.");
+                    gameState.trophySeen = true;
+                }
+                moved = true;
+            }
+        }
+        else if (dest === "kitchen") {
+             if (["corridor", "kitchen"].includes(gameState.room)) {
+                gameState.room = "kitchen";
+                print("You moved to the kitchen.");
+                if (!gameState.kitchenSeen) {
+                    print("Smell of raw meat.");
+                    gameState.kitchenSeen = true;
+                }
+                moved = true;
+             }
+        }
+        else if (dest === "entrance" || dest === "entrance room") {
+            if (["corridor", "entrance"].includes(gameState.room)) {
+                gameState.room = "entrance";
+                print("You moved to the entrance room.");
+                if (!gameState.entranceSeen) {
+                    print("Barren room. Bulletproof window. Locked door.");
+                    gameState.entranceSeen = true;
+                }
+                moved = true;
+            }
+        }
+        else if (dest === "outside" || dest === "out") {
+            if (gameState.entranceUnlocked && gameState.room === "entrance") {
+                print("You got out of the house.");
+                gameState.reachedExit = true;
+                gameState.section = 3;
+                initSection3();
+                return;
+            }
+        }
+
+        if (!moved) {
+            print("Can't go there right now.");
+        }
+    }
+
+    function handleUnlock() {
+        if (gameState.room === "bedroom" && gameState.keys.includes("office key")) {
+            print("Office unlocked.");
+            gameState.officeUnlocked = true;
+        } else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) {
+            print("Trophy room unlocked.");
+            gameState.trophyUnlocked = true;
+        } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
+            print("Firearm locker unlocked. Inside is a loaded rifle.");
+            gameState.inventory.push("loaded rifle");
+        } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
+            print("Entrance door unlocked.");
+            gameState.entranceUnlocked = true;
+        } else {
+            print("Nothing to unlock.");
+        }
+    }
+
+    function initTrap() {
+        print("Setting a trap takes 10 minutes. Or 3 minutes if you use an item:");
+        if (gameState.inventory.includes("rope")) print("rope");
+        if (gameState.inventory.includes("taxidermied fox?")) print("taxidermied fox?");
+        if (gameState.inventory.includes("sharp knife")) print("sharp knife");
+        if (gameState.inventory.includes("fishing rod")) print("fishing rod");
+        if (gameState.inventory.includes("bottled water")) print("bottled water");
+        
+        print("Type the item name, or 'none'.");
+        gameState.makingTrap = true;
+    }
+
+    function handleTrapInput(input) {
+        if (input === "none") {
+            print("You set a trap manually.");
+            gameState.time -= 10;
+        } else if (gameState.inventory.includes(input) || (input === "fox" && gameState.inventory.includes("taxidermied fox?")) || (input === "water" && gameState.inventory.includes("bottled water"))) {
+            // Simplification for the sake of the demo
+            if (input === "fox") input = "taxidermied fox?";
+            if (input === "water") input = "bottled water";
+            
+            let idx = gameState.inventory.indexOf(input);
+            gameState.inventory.splice(idx, 1);
+            print("You used " + input + " for a trap.");
+            gameState.time -= 3;
+        } else {
+            print("Invalid item.");
+        }
+        gameState.makingTrap = false;
+        print("Trap set in " + gameState.room);
+    }
+
+    function initSection3() {
+        if (!gameState.reachedExit) {
+            print("\nSECTION 3: THE HOST\n");
+            print("Someone tries to open the entrance door. The host is here.");
+            print("(Tutorial: Turn based. 2 Actions per turn. Move, Attack, Hide, Wait.)");
+        } else {
+            print("\nCONGRATULATIONS!");
+            print("You escaped the house successfully!");
+            print("Final Survival Points: " + gameState.survivalPoints);
+        }
+    }
+
+    function checkTurn() {
+        if (gameState.playerActions <= 0) {
+            print("\n--- HOST TURN ---");
+            print("The host moves around the house...");
+            // Host logic would go here (random movement based on the array in your code)
+            gameState.playerActions = 2;
+            print("\n--- YOUR TURN ---");
+        }
+    }
+
+    // Start
+    startGame();
+
+</script>
   </body>
 </html>

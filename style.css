@@ -4,7 +4,8 @@ body {
   justify-content: center;
   text-align: center;
   height: 100vh;
-  text-color: white;
+  color: white;
+  align-items: center;
 }
 p {
   color: white;

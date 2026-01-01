@@ -3,6 +3,7 @@ body {
   display: flex;
   justify-content: center;
   text-align: center;
+  height: 100vh;
 }
 p {
   color: white;
@@ -32,7 +33,7 @@ p {
   text-align: left;
   border-style: solid;
   border-color: gray;
-  color: white;
+  text-color: white;
 }
 #map-move{
   max-width: 500px;

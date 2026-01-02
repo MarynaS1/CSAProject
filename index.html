@@ -81,10 +81,10 @@
           <button onclick="handleInput()">Submit</button>
         </div>-->
         <div id="actions">
-          <input type="button" onclick="buttonInput('1')" value="Look around">
-          <input type="button" onclick="buttonInput('2')" value="Examine yourself">
-          <input type="button" onclick="buttonInput('Look');" value="Look">
-          <input type="button" onclick="buttonInput('Trap');" value="Trap">
+          <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
+          <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">
+          <input type="button" id="Look" value="Look" onclick="buttonInput('Look')">
+          <input type="button" id="Trap" value="Trap" onclick="buttonInput('Trap')">
           <button onclick="buttonInput()">placeholder</button>
           <button onclick="buttonInput()">placeholder</button>
           <button onclick="buttonInput()">placeholder</button>
@@ -230,8 +230,11 @@
                 return;
             }
 
-            if (input === "Look") {
+            if (input === "look") {
                 handleLook();
+            }
+            else if (input === "actions" || input === "action" || input === "help") {
+                showActions();
             }
             else if (input === "move") {
                 print("\nChoose a room to move to:");
@@ -257,14 +260,20 @@
                 handleMovement(input);
                 gameState.subState = ""; // Reset
             }
-            else if (input === "Unlock") {
+            else if (input === "inventory") {
+                print("Inventory: " + gameState.inventory.join(", "));
+            }
+            else if (input === "keys" || input === "key") {
+                print("Keys: " + gameState.keys.join(", "));
+            }
+            else if (input === "unlock") {
                 handleUnlock();
             }
-            else if (input === "Trap") {
+            else if (input === "trap" || input === "traps") {
                 initTrap();
             }
             // Specific Actions
-            else if (input === "Rope") {
+            else if (input === "rope") {
                  if (gameState.inventory.includes("sharp knife")) {
                     print("You cut the rope with the sharp knife.");
                     gameState.inventory.push("rope");
@@ -275,7 +284,7 @@
                     gameState.time -= 5;
                 }
             }
-            else if ((input === "Firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
+            else if ((input === "firewood" || input === "fire wood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
                 print("You tied the firewood together with the rope. Now you can carry it.");
                 gameState.inventory.push("firewood");
             }
@@ -314,13 +323,13 @@
                 gameState.subState = "";
                 checkTurn();
             }
-            else if (input === "Wait") {
+            else if (input === "wait") {
                 print("You wait.");
                 gameState.playerActions--;
                 checkTurn();
             }
             else {
-                print("Not an option");
+                print("Action not recognized or not implemented yet.");
             }
         }
     }
@@ -329,7 +338,8 @@
 
     function initSection2() {
         print("After some time you manage to free yourself. The wind is howling outside. The blizzard seems to have worsened since you got here. Even if you get out of the house, you would need some supplies to simply not die of the cold, not to mention even finding your way. You think you can \"borrow\" some stuff from this property before their owner comes back, whenever that is...\n");
-        
+        hideButton("1");
+        hideButton("2");
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
@@ -583,7 +593,12 @@
             print("\n--- YOUR TURN ---");
         }
     }
-
+    function hideButton(ButtonId) {
+    document.getElementById(ButtonId).style.display = "none";
+    }
+    function hideButton(ButtonId) {
+    document.getElementById(ButtonId).style.display = "inline-block";
+    }
     // Start
     startGame();
 

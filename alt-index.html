@@ -122,10 +122,17 @@
     const inputField = document.getElementById('user-input');
 
     function print(text) {
-        // Appends text to the div
-        outputDiv.innerHTML += text + "\n";
-        // Auto scroll to bottom
-        document.getElementById('game-container').scrollTop = document.getElementById('game-container').scrollHeight;
+        var i = 0;
+        var speed = 50; /* The speed/duration of the effect in milliseconds */
+        if (i < txt.length) {
+            outputDiv.innerHTML += text.harAt(i);
+            i++;
+            setTimeout(typeWriter, speed);
+            // Auto scroll to bottom
+            document.getElementById('game-container').scrollTop = document.getElementById('game-container').scrollHeight;
+        }
+        outputDiv.innerHTML +="\n"        
+        
     }
 
     function startGame() {

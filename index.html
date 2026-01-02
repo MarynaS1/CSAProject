@@ -190,6 +190,7 @@
                 gameState.seenIntroOne = true;
                 if (gameState.seenIntroTwo) {
                     print("The knife seems somewhat sharp. The same can’t be said about whoever left you here. You take the knife and start cutting the rope...\n");
+                    gameState.section = 2;
                     initSection2();
                 }
             }
@@ -596,7 +597,7 @@
     function hideButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "none";
     }
-    function hideButton(ButtonId) {
+    function showButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "inline-block";
     }
     // Start

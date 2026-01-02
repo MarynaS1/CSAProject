@@ -82,7 +82,7 @@
         </div>-->
         <div id="actions">
           <input type="button" onclick="buttonInput('1')" value="Look around">
-          <input type="button" onclick="buttonInput('2'); return false;" value="Examine yourself">
+          <input type="button" onclick="buttonInput('2')" value="Examine yourself">
           <input type="button" value="Look" onclick="buttonInput('look');">
           <input type="button" value="Trap" onclick="buttonInput('trap');">
           <button onclick="buttonInput()">placeholder</button>
@@ -184,21 +184,12 @@
 
         // --- SECTION 1: INTRO ---
         if (gameState.section === 1) {
-            
-            if (gameState.subState === "pausing") {
-                // This mimics the 'scan.nextLine()' used purely for pausing
-                gameState.section = 2;
-                initSection2();
-                return;
-            }
 
             if (input === "1") {
                 print("\nThe shack is well lit with the still burning fireplace. The windows show only a blizzard. On the bedside table you see some food, as well as a fork and a knife. How nice of them.\n");
                 gameState.seenIntroOne = true;
                 if (gameState.seenIntroTwo) {
                     print("The knife seems somewhat sharp. The same can’t be said about whoever left you here. You take the knife and start cutting the rope...\n");
-                    print("[Press Enter to continue]");
-                    gameState.subState = "pausing";
                 }
             }
             else if (input === "2") {
@@ -346,7 +337,6 @@
 
     function initSection2() {
         print("After some time you manage to free yourself. The wind is howling outside. The blizzard seems to have worsened since you got here. Even if you get out of the house, you would need some supplies to simply not die of the cold, not to mention even finding your way. You think you can \"borrow\" some stuff from this property before their owner comes back, whenever that is...\n");
-        print("[Press Enter]"); // Pausing for effect
         
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;

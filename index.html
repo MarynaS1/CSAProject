@@ -83,8 +83,8 @@
         <div id="actions">
           <input type="button" onclick="buttonInput('1')" value="Look around">
           <input type="button" onclick="buttonInput('2')" value="Examine yourself">
-          <input type="button" value="Look" onclick="buttonInput('look');">
-          <input type="button" value="Trap" onclick="buttonInput('trap');">
+          <input type="button" onclick="buttonInput('Look');" value="Look">
+          <input type="button" onclick="buttonInput('Trap');" value="Trap">
           <button onclick="buttonInput()">placeholder</button>
           <button onclick="buttonInput()">placeholder</button>
           <button onclick="buttonInput()">placeholder</button>
@@ -230,11 +230,8 @@
                 return;
             }
 
-            if (input === "look") {
+            if (input === "Look") {
                 handleLook();
-            }
-            else if (input === "actions" || input === "action" || input === "help") {
-                showActions();
             }
             else if (input === "move") {
                 print("\nChoose a room to move to:");
@@ -260,20 +257,14 @@
                 handleMovement(input);
                 gameState.subState = ""; // Reset
             }
-            else if (input === "inventory") {
-                print("Inventory: " + gameState.inventory.join(", "));
-            }
-            else if (input === "keys" || input === "key") {
-                print("Keys: " + gameState.keys.join(", "));
-            }
-            else if (input === "unlock") {
+            else if (input === "Unlock") {
                 handleUnlock();
             }
-            else if (input === "trap" || input === "traps") {
+            else if (input === "Trap") {
                 initTrap();
             }
             // Specific Actions
-            else if (input === "rope") {
+            else if (input === "Rope") {
                  if (gameState.inventory.includes("sharp knife")) {
                     print("You cut the rope with the sharp knife.");
                     gameState.inventory.push("rope");
@@ -284,7 +275,7 @@
                     gameState.time -= 5;
                 }
             }
-            else if ((input === "firewood" || input === "fire wood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
+            else if ((input === "Firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
                 print("You tied the firewood together with the rope. Now you can carry it.");
                 gameState.inventory.push("firewood");
             }
@@ -323,13 +314,13 @@
                 gameState.subState = "";
                 checkTurn();
             }
-            else if (input === "wait") {
+            else if (input === "Wait") {
                 print("You wait.");
                 gameState.playerActions--;
                 checkTurn();
             }
             else {
-                print("Action not recognized or not implemented yet.");
+                print("Not an option");
             }
         }
     }

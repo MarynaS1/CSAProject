@@ -82,7 +82,7 @@
         </div>-->
         <div id="actions">
           <input type="button" onclick="buttonInput('1')" value="Look around">
-          <input type="button" onclick="buttonInput('2')" value="Examine yourself">
+          <input type="button" onclick="buttonInput('2'); return false;" value="Examine yourself">
           <input type="button" value="Look" onclick="buttonInput('look');">
           <input type="button" value="Trap" onclick="buttonInput('trap');">
           <button onclick="buttonInput()">placeholder</button>
@@ -179,7 +179,7 @@
     function buttonInput(buttonValue) {
         //let input = inputField.value.trim().toLowerCase();
         let input = buttonValue;
-        inputField.value = ""; // Clear input
+        //inputField.value = ""; // Clear input
         print("> " + input); // Echo user input
 
         // --- SECTION 1: INTRO ---

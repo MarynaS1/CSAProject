@@ -76,15 +76,19 @@
         <div id="game-container">
           <div id="output"></div>
         </div>
-        <div class="user-input-area">
+        <!--<div class="user-input-area">
           <input type="text" id="user-input" placeholder="..." autofocus autocomplete="off">
           <button onclick="handleInput()">Submit</button>
-        </div>
+        </div>-->
         <div id="actions">
-          <p>ACTION</p>
-          <p>ACTION</p>
-          <p>ACTION</p>
-          <p>ACTION</p>
+          <input type="button" value="Look around" onclick="buttonInput('look around')">
+          <input type="button" value="Examine yourself" onclick="buttonInput('examine yourself')">
+          <input type="button" value="Look" onclick="buttonInput('look')">
+          <input type="button" value="Trap" onclick="buttonInput('trap')">
+          <button onclick="buttonInput()">placeholder</button>
+          <button onclick="buttonInput()">placeholder</button>
+          <button onclick="buttonInput()">placeholder</button>
+          <button onclick="buttonInput()">placeholder</button>
         </div>
       </div>
       <div id="map-move">
@@ -164,16 +168,17 @@
     }
 
     // Handle Enter Key
-    inputField.addEventListener("keydown", function(event) {
+    /*inputField.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             handleInput();
         }
-    });
+    });*/
 
     // --- MAIN LOGIC ---
 
-    function handleInput() {
-        let input = inputField.value.trim().toLowerCase();
+    function buttonInput(buttonValue) {
+        //let input = inputField.value.trim().toLowerCase();
+        let input = buttonValue;
         inputField.value = ""; // Clear input
         print("> " + input); // Echo user input
 

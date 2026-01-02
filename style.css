@@ -3,7 +3,6 @@ body {
   display: flex;
   justify-content: center;
   text-align: center;
-  height: 100vh;
   color: white;
   align-items: center;
 }
@@ -19,6 +18,7 @@ p {
   border-color: gray;
   padding: 10px;
   width:50%;
+  height:200vh;
   justify-content: space-around;
   margin-top: 20%;
   flex-wrap: nowrap;

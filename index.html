@@ -173,13 +173,7 @@
         hideButton("Get rope");
         hideButton("Get firewood");
       
-        hideButton('Trophy room');
-        hideButton('Office');
-        hideButton('Outside');
-        hideButton('Entrance room');
-        hideButton('Kitchen');
-        hideButton('Bedroom');
-        hideButton('Corridor');
+        hideAllMovement();
     }
 
     // Handle Enter Key
@@ -353,7 +347,7 @@
         hideButton("2");
         showButton("Look");
         showButton("Place trap");
-        showButton("");
+        showButton("Corridor");
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");

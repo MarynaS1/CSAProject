@@ -84,7 +84,7 @@
           <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
           <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">
           <input type="button" id="Look" onclick="buttonInput('Look')" value="Look">
-          <input type="button" id="Place rap" onclick="buttonInput('Place trap')" value="Place trap">
+          <input type="button" id="Place trap" onclick="buttonInput('Place trap')" value="Place trap">
           <input type="button" id="Unlock" onclick="buttonInput('Unlock')" value="Unlock">
           <input type="button" id="Get rope" onclick="buttonInput('Get rope')" value="Get rope">
           <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
@@ -165,11 +165,11 @@
         print("You wake up in an unfamiliar shack. You don’t remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("[Type in the number of the option given to you to choose it. To see available options again, type \"actions\". If you're not asked for input, press enter to see the next section.]\n");
         print("1. Look around\n2. Examine yourself\n");
-        hideButton('Look');
-        hideButton('Place trap');
-        hideButton('Get rope');
-        hideButton('Get firewood');
-        hideButton('Unlock');
+        hideButton("Look");
+        hideButton("Place trap");
+        hideButton("Unlock");
+        hideButton("Get rope");
+        hideButton("Get firewood");
     }
 
     // Handle Enter Key

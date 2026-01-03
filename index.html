@@ -21,9 +21,6 @@
         overflow-wrap: break-word;
         margin: 10px;
       }
-      input [type=button]{
-        display:none;
-      }
       #game{
         display: flex;
         border-style: solid;
@@ -170,9 +167,7 @@
         print("You wake up in an unfamiliar shack. You don’t remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("[Type in the number of the option given to you to choose it. To see available options again, type \"actions\". If you're not asked for input, press enter to see the next section.]\n");
         print("1. Look around\n2. Examine yourself\n");
-        showButton('1');
-        showButton('2');
-        /*hideButton("Look");
+        hideButton("Look");
         hideButton("Place trap");
         hideButton("Unlock");
         hideButton("Get rope");
@@ -184,7 +179,7 @@
         hideButton('Entrance room');
         hideButton('Kitchen');
         hideButton('Bedroom');
-        hideButton('Corridor');*/
+        hideButton('Corridor');
     }
 
     // Handle Enter Key
@@ -358,6 +353,7 @@
         hideButton("2");
         showButton("Look");
         showButton("Place trap");
+        showButton("");
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
@@ -483,6 +479,9 @@
                 gameState.room = "bedroom";
                 print("You moved to the bedroom.");
                 moved = true;
+                hideAllMovement();
+                showButton("Corridor");
+                if(gameState.officeUnlocked) showButton("Office");
             }
         }
         else if (dest === "corridor") {
@@ -494,6 +493,11 @@
                     gameState.corridorSeen = true;
                 }
                 moved = true;
+                hideAllMovement();
+                showButton("Bedroom");
+                showButton("Kitchen");
+                showButton("Entrance Room");
+                if(gameState.trophyUnlocked)showButton("Trophy room");
             }
         }
         else if (dest === "office") {
@@ -505,6 +509,8 @@
                     gameState.officeSeen = true;
                 }
                 moved = true;
+                hideAllMovement();
+                showButton("Bedroom");
             }
         }
         else if (dest === "trophy" || dest === "trophy room") {
@@ -516,6 +522,8 @@
                     gameState.trophySeen = true;
                 }
                 moved = true;
+                hideAllMovement();
+                showButton("Corridor");
             }
         }
         else if (dest === "kitchen") {
@@ -527,6 +535,8 @@
                     gameState.kitchenSeen = true;
                 }
                 moved = true;
+                 hideAllMovement();
+                 showButton("Corridor");
              }
         }
         else if (dest === "entrance" || dest === "entrance room") {
@@ -538,6 +548,9 @@
                     gameState.entranceSeen = true;
                 }
                 moved = true;
+                hideAllMovement();
+                showButton("Outside");
+                showButton("Corridor");
             }
         }
         else if (dest === "outside" || dest === "out") {
@@ -545,6 +558,7 @@
                 print("You got out of the house.");
                 gameState.reachedExit = true;
                 gameState.section = 3;
+                hideAllMovement();
                 initSection3();
                 return;
             }
@@ -632,6 +646,15 @@
     }
     function showButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "inline-block";
+    }
+    function hideAllMovement(){
+      hideButton("Entrance room");
+      hideButton("Trophy room");
+      hideButton("Kitchen");
+      hideButton("Bedroom");
+      hideButton("Office");
+      hideButton("Corridor");
+      hideButton("Outside");
     }
     // Start
     startGame();

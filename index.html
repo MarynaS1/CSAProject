@@ -94,10 +94,13 @@
       <div id="map-move">
         <p>MAP PLACEHOLDER</p>
         <div id="move">
-          <p>MOVEMENT</p>
-          <p>MOVEMENT</p>
-          <p>MOVEMENT</p>
-          <p>MOVEMENT</p>
+          <input type="button" id="Trophy room" onclick="buttonInput('Trophy room')" value="Trophy room">
+          <input type="button" id="Office" onclick="buttonInput('Office')" value="Office">
+          <input type="button" id="Outside" onclick="buttonInput('Outsude')" value="Outside">
+          <input type="button" id="Entrance room" onclick="buttonInput('Entrance room')" value="Entrance room">
+          <input type="button" id="Kitchen" onclick="buttonInput('Kitchen')" value="Kitchen">
+          <input type="button" id="Bedroom" onclick="buttonInput('Bedroom')" value="Bedroom">
+          <input type="button" id="Corridor" onclick="buttonInput('Corridor')" value="Corridor">
         </div>
       </div>
     </div>
@@ -239,7 +242,7 @@
             if (input === "Look") {
                 handleLook();
             }
-            else if (input === "move") {
+            /*else if (input === "move") {
                 print("\nChoose a room to move to:");
                 print("Stay");
                 if (gameState.room === "bedroom") {
@@ -257,7 +260,11 @@
                     print("Corridor");
                 }
                 gameState.subState = "moving"; // Expect next input to be a room
+            }*/
+            else if(input === "Trophy room" || input === "Office" || input === "Outside" || input === "Entrance room" || input === "Kitchen" || input === "Bedroom" || input === "Corridor"){
+              handleMovement(input);
             }
+
             // Handle the actual movement input
             else if (gameState.subState === "moving") {
                 handleMovement(input);

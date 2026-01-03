@@ -84,11 +84,11 @@
           <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
           <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">
           <input type="button" id="Look" onclick="buttonInput('Look')" value="Look">
-          <input type="button" id="Trap" onclick="buttonInput('Trap')" value="Trap">
-          <button onclick="buttonInput()">placeholder</button>
-          <button onclick="buttonInput()">placeholder</button>
-          <button onclick="buttonInput()">placeholder</button>
-          <button onclick="buttonInput()">placeholder</button>
+          <input type="button" id="Place rap" onclick="buttonInput('Place trap')" value="Place trap">
+          <input type="button" id="Unlock" onclick="buttonInput('Unlock')" value="Unlock">
+          <input type="button" id="Get rope" onclick="buttonInput('Get rope')" value="Get rope">
+          <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
+          
         </div>
       </div>
       <div id="map-move">
@@ -165,6 +165,11 @@
         print("You wake up in an unfamiliar shack. You don’t remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("[Type in the number of the option given to you to choose it. To see available options again, type \"actions\". If you're not asked for input, press enter to see the next section.]\n");
         print("1. Look around\n2. Examine yourself\n");
+        hideButton('Look');
+        hideButton('Place trap');
+        hideButton('Get rope');
+        hideButton('Get firewood');
+        hideButton('Unlock');
     }
 
     // Handle Enter Key
@@ -261,7 +266,7 @@
             else if (input === "Unlock") {
                 handleUnlock();
             }
-            else if (input === "Trap") {
+            else if (input === "Place trap") {
                 initTrap();
             }
             // Specific Actions
@@ -332,6 +337,8 @@
         print("After some time you manage to free yourself. The wind is howling outside. The blizzard seems to have worsened since you got here. Even if you get out of the house, you would need some supplies to simply not die of the cold, not to mention even finding your way. You think you can \"borrow\" some stuff from this property before their owner comes back, whenever that is...\n");
         hideButton("1");
         hideButton("2");
+        showButton("Look");
+        showButton("Place trap");
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
@@ -417,13 +424,28 @@
         print("\nAvailable actions:\n\"Look\" - [5 min] Search room.\n\"Move\" - Change room.\n\"Trap\" - [10 min] Place trap.\n\"Inventory\"\n\"Keys\"");
         if (gameState.room === "bedroom") {
             if (gameState.inventory.includes("sharp knife")) print("\"Rope\" - [1min] Cut rope.");
-            else print("\"Rope\" - [5min] Cut rope.");
+            else print("\"Get rope\" - [5min] Cut rope.");
             if (gameState.bedroomCheck === 1) print("\"Firewood\" - [3min] get firewood (needs rope).");
             if (gameState.keys.includes("office key")) print("\"Unlock\" - Unlock office.");
         }
         if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) print("\"Unlock\" - Unlock trophy room.");
         if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1) print("\"Unlock\" - Unlock firearm locker.");
         if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) print("\"Unlock\" - Unlock entrance.");
+    }
+
+    function updateButtons(){
+      if (gameState.room === "bedroom") {
+        if (gameState.inventory.includes("sharp knife")) showButton("Get rope");
+        else hideButton("Get rope");
+        if (gameState.bedroomCheck === 1 && gamestate.inventory.includes("rope")) showButton("Get firewood");
+        else hideButton("Get firewood");
+        if (gameState.keys.includes("office key")) showButton("Unlock");
+        else hideButton("Unlock");
+      }
+      else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) showButton("Unlock");
+      else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1) showButton("Unlock");
+      else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) showButton("Unlock");
+      else hideButton("Unlock");
     }
 
     function handleMovement(dest) {
@@ -512,6 +534,7 @@
         if (!moved) {
             print("Can't go there right now.");
         }
+        updateButtons();
     }
 
     function handleUnlock() {

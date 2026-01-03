@@ -507,7 +507,7 @@
                 showButton("Bedroom");
             }
         }
-        else if (dest === "trophy" || dest === "trophy room") {
+        else if (dest === "trophy room") {
             if (gameState.trophyUnlocked && ["corridor", "trophy"].includes(gameState.room)) {
                 gameState.room = "trophy";
                 print("You moved to the trophy room.");
@@ -533,7 +533,7 @@
                  showButton("Corridor");
              }
         }
-        else if (dest === "entrance" || dest === "entrance room") {
+        else if (dest === "entrance room") {
             if (["corridor", "entrance"].includes(gameState.room)) {
                 gameState.room = "entrance";
                 print("You moved to the entrance room.");
@@ -543,11 +543,12 @@
                 }
                 moved = true;
                 hideAllMovement();
-                showButton("Outside");
                 showButton("Corridor");
+                if(gameState.entranceUnlocked) showButton("Outside");
+
             }
         }
-        else if (dest === "outside" || dest === "out") {
+        else if (dest === "outside") {
             if (gameState.entranceUnlocked && gameState.room === "entrance") {
                 print("You got out of the house.");
                 gameState.reachedExit = true;

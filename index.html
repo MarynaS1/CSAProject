@@ -21,7 +21,9 @@
         overflow-wrap: break-word;
         margin: 10px;
       }
-      
+      .button{
+        display:none;
+      }
       #game{
         display: flex;
         border-style: solid;
@@ -96,7 +98,7 @@
         <div id="move">
           <input type="button" id="Trophy room" onclick="buttonInput('Trophy room')" value="Trophy room">
           <input type="button" id="Office" onclick="buttonInput('Office')" value="Office">
-          <input type="button" id="Outside" onclick="buttonInput('Outsude')" value="Outside">
+          <input type="button" id="Outside" onclick="buttonInput('Outside')" value="Outside">
           <input type="button" id="Entrance room" onclick="buttonInput('Entrance room')" value="Entrance room">
           <input type="button" id="Kitchen" onclick="buttonInput('Kitchen')" value="Kitchen">
           <input type="button" id="Bedroom" onclick="buttonInput('Bedroom')" value="Bedroom">
@@ -168,11 +170,21 @@
         print("You wake up in an unfamiliar shack. You don’t remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("[Type in the number of the option given to you to choose it. To see available options again, type \"actions\". If you're not asked for input, press enter to see the next section.]\n");
         print("1. Look around\n2. Examine yourself\n");
-        hideButton("Look");
+        showButton('1');
+        showButton('2');
+        /*hideButton("Look");
         hideButton("Place trap");
         hideButton("Unlock");
         hideButton("Get rope");
         hideButton("Get firewood");
+      
+        hideButton('Trophy room');
+        hideButton('Office');
+        hideButton('Outside');
+        hideButton('Entrance room');
+        hideButton('Kitchen');
+        hideButton('Bedroom');
+        hideButton('Corridor');*/
     }
 
     // Handle Enter Key

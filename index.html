@@ -31,7 +31,7 @@
         justify-content: space-around;
         margin-top: 20px;
         flex-wrap: nowrap;
-        flex-direction: row;
+        flex-direction: column;
         flex-grow:3;
       }
       #actions{
@@ -72,9 +72,10 @@
         <input type="text" id="user-input" placeholder="..." autofocus autocomplete="off">
         <button onclick="handleInput()">Submit</button>
       </div>-->
-      <p>INVENTORY</p>
-      <p>KEYS</p>
+      
       <div id="actions">
+        <p>INVENTORY</p>
+        <p>KEYS</p>
         <p>Actions:</p>
         <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
         <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">

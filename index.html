@@ -34,7 +34,7 @@
         flex-direction: row;
         flex-grow:3;
       }
-      #text-action{
+      #actions{
         max-width: 500px;
         min-width: 20px;
         margin-right: 10px;
@@ -42,12 +42,6 @@
         flex-grow: 2;
       }
 
-      #map-move{
-        max-width: 400px;
-        min-width: 20px;
-        flex-shrink: 1;
-        flex-grow: 1;
-      }
       #game-container {
         width: 80%;
         max-width: 800px;
@@ -71,36 +65,33 @@
   </head>
   <body>
     <div id="game">
-      <div id="text-action">
-        <div id="game-container">
-          <div id="output"></div>
-        </div>
-        <!--<div class="user-input-area">
-          <input type="text" id="user-input" placeholder="..." autofocus autocomplete="off">
-          <button onclick="handleInput()">Submit</button>
-        </div>-->
-        <div id="actions">
-          <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
-          <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">
-          <input type="button" id="Look" onclick="buttonInput('Look')" value="Look">
-          <input type="button" id="Place trap" onclick="buttonInput('Place trap')" value="Place trap">
-          <input type="button" id="Unlock" onclick="buttonInput('Unlock')" value="Unlock">
-          <input type="button" id="Get rope" onclick="buttonInput('Get rope')" value="Get rope">
-          <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
-          
-        </div>
+      <div id="game-container">
+        <div id="output"></div>
       </div>
-      <div id="map-move">
-        <p>MAP PLACEHOLDER</p>
-        <div id="move">
-          <input type="button" id="Trophy room" onclick="buttonInput('Trophy room')" value="Trophy room">
-          <input type="button" id="Office" onclick="buttonInput('Office')" value="Office">
-          <input type="button" id="Outside" onclick="buttonInput('Outside')" value="Outside">
-          <input type="button" id="Entrance room" onclick="buttonInput('Entrance room')" value="Entrance room">
-          <input type="button" id="Kitchen" onclick="buttonInput('Kitchen')" value="Kitchen">
-          <input type="button" id="Bedroom" onclick="buttonInput('Bedroom')" value="Bedroom">
-          <input type="button" id="Corridor" onclick="buttonInput('Corridor')" value="Corridor">
-        </div>
+      <!--<div class="user-input-area">
+        <input type="text" id="user-input" placeholder="..." autofocus autocomplete="off">
+        <button onclick="handleInput()">Submit</button>
+      </div>-->
+      <p>INVENTORY</p>
+      <p>KEYS</p>
+      <div id="actions">
+        <p>Actions:</p>
+        <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
+        <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">
+        <input type="button" id="Look" onclick="buttonInput('Look')" value="Look">
+        <input type="button" id="Place trap" onclick="buttonInput('Place trap')" value="Place trap">
+        <input type="button" id="Unlock" onclick="buttonInput('Unlock')" value="Unlock">
+        <input type="button" id="Get rope" onclick="buttonInput('Get rope')" value="Get rope">
+        <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
+
+        <p>Movement:</p>
+        <input type="button" id="Trophy room" onclick="buttonInput('Trophy room')" value="Trophy room">
+        <input type="button" id="Office" onclick="buttonInput('Office')" value="Office">
+        <input type="button" id="Outside" onclick="buttonInput('Outside')" value="Outside">
+        <input type="button" id="Entrance room" onclick="buttonInput('Entrance room')" value="Entrance room">
+        <input type="button" id="Kitchen" onclick="buttonInput('Kitchen')" value="Kitchen">
+        <input type="button" id="Bedroom" onclick="buttonInput('Bedroom')" value="Bedroom">
+        <input type="button" id="Corridor" onclick="buttonInput('Corridor')" value="Corridor">
       </div>
     </div>
     <script>

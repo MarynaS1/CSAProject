@@ -101,6 +101,7 @@
           <input type="button" id="Unlock" onclick="buttonInput('Unlock')" value="Unlock">
           <input type="button" id="Get rope" onclick="buttonInput('Get rope')" value="Get rope">
           <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
+          <input type="button" id="(Action descriptions)" onclick="buttonInput('(Action descriptions)')" value="(Action descriptions)">
         </div>
         <p>Movement:</p>
         <div class="choices">
@@ -175,8 +176,7 @@
         // Init Section 1
         gameState.inventory = [];
         gameState.keys = [];
-        print("You wake up in an unfamiliar shack. You don’t remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
-        print("[Type in the number of the option given to you to choose it. To see available options again, type \"actions\". If you're not asked for input, press enter to see the next section.]\n");
+        print("You wake up in an unfamiliar shack. You don't remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("1. Look around\n2. Examine yourself\n");
         hideButton("Look");
         hideButton("Place trap");
@@ -221,14 +221,10 @@
                     print("Wait, wasn’t there a knife nearby? You wonder if it could cut the rope.\n");
                 }
             }
-            else if (input === "actions" || input === "help") {
+            else if (input === "(Action descriptions)") {
                 print("Available actions:\n1. Look around\n2. Examine yourself\n");
             }
-            else if (input === "exit") {
-                print("SECTION EXITED");
-                gameState.section = 2;
-                initSection2();
-            }
+
             else {
                 print("Not an option.\n");
             }
@@ -314,6 +310,9 @@
                 gameState.time = 360;
                 print("Time set to 360.");
             }*/
+            else if (input === "(Action descriptions)"){
+              showActions();
+            }
             else {
                 print("Not an option.\n");
             }
@@ -325,7 +324,7 @@
             // I have implemented the structure based on what was provided.
             
             if (input === "actions" || input === "help") {
-                let actions = "\nAvailable actions:\n\"Move\" - Choose a room to move to. \n\"Inventory\" - Check to see what your inventory contains.\n\"Keys\" - Check what keys you have.\n\"Attack\" - Attack the host with a weapon.\n\"Hide\" - Hide from the host.\n\"Wait\" - Skip one action.";
+                let actions = "\nAvailable actions:\n\"Move\" - Choose a room to move to. \n\"Attack\" - Attack the host with a weapon.\n\"Hide\" - Hide from the host.\n\"Wait\" - Skip one action.";
                 print(actions);
             } 
             else if (input === "move") {
@@ -365,25 +364,27 @@
         
         gameState.inventory.push("food");
         gameState.inventory.push("Small knife");
-        print("(Tutorial: You have " + gameState.time + " min before host returns. Type \"actions\" to see options.)");
+        print("(Tutorial: You have a certain amount of time before host returns. You do not know how much that is. You can spend this time [min] to do certain actions. To see what the actions do and how much time they take, press the (Action descriptions) button.");
     }
 
     function handleLook() {
         if (gameState.room === "bedroom") {
             if (gameState.bedroomCheck === 0) {
-                print("You have found an entrance key, lighter, and some firewood. You cannot get firewood yet, because you need rope.");
+                print("You have found an entrance key, lighter, and some firewood. You cannot get firewood yet, because you need rope to tie it so that you can carry it.");
+                print("(When you get the rope, the choice to collect the firewood should appear)");
+                print("Other than that, you think you found everything here.");
                 gameState.keys.push("entrance key");
                 gameState.inventory.push("lighter");
                 gameState.bedroomCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 1;
             } else {
-                print("Nothing to look for here.");
+                print("Nothing to look for here. (No time used up)");
             }
         }
         else if (gameState.room === "office") {
             if (gameState.officeCheck === 0) {
-                print("You have found a trophy room key, a fishing rod and bait.");
+                print("You have found a trophy room key, a fishing rod and bait. You feel like you have missed some things... Maybe you should have a look again sometime?");
                 gameState.keys.push("trophy room key");
                 gameState.inventory.push("fishing rod");
                 gameState.inventory.push("bait");
@@ -391,7 +392,7 @@
                 gameState.time -= 5;
                 gameState.survivalPoints += 2;
             } else if (gameState.officeCheck === 1) {
-                print("You have found paper, a map, and a firearm locker key.");
+                print("You have found a few blank pieces of paper, a map of the surrounding area, and a firearm locker key. You think you found everything here.");
                 gameState.inventory.push("paper");
                 gameState.inventory.push("map of the surroundings");
                 gameState.keys.push("firearm locker key");
@@ -399,22 +400,24 @@
                 gameState.time -= 5;
                 gameState.survivalPoints += 3;
             } else {
-                print("Nothing to look for here.");
+                print("Nothing to look for here. (No time used up)");
             }
         }
         else if (gameState.room === "trophy") {
              if (gameState.trophyCheck === 0) {
-                 print("You found a firearm locker (needs key) and a taxidermied fox? You think you can use it for a trap.");
+                  print("You have found a firearm locker, but you're goint to need to use a key in your actions to unlock it...");
+                  print("You have also found a taxidermied fox! Sure, not a very surprising find in this room, but something about it seems very... entrancing...");
+                  print("After staring at it for a straight minute, you break out of it. Whatever this thing actually is, you think you can use it for a trap or distraction.\n");
                  gameState.inventory.push("taxidermied fox?");
                  gameState.trophyCheck++;
                  gameState.time -= 6;
              } else {
-                 print("Nothing else here.");
+                 print("Nothing to look for here. (No time used up)");
              }
         }
         else if (gameState.room === "kitchen") {
             if (gameState.kitchenCheck === 0) {
-                print("You found an office key and a sharp knife.");
+                print("ou have found an office key, and a sharp knife. You feel like you have missed some things... Maybe you should have a look again sometime?");
                 gameState.inventory.push("sharp knife");
                 gameState.keys.push("office key");
                 gameState.kitchenCheck++;
@@ -423,34 +426,35 @@
             } else if (gameState.kitchenCheck === 1) {
                 print("You found bottled water and raw meat.");
                 if(gameState.inventory.includes("firewood")) {
-                    print("You think you could cook it with the firewood.");
+                    print("You think you could cook it with the firewood you found.");
                     gameState.survivalPoints += 2;
                 }
+                else print("The meat will be useless if you dont have any firewood to cook it on though. You think you found everything here.");
                 gameState.inventory.push("bottled water");
                 gameState.inventory.push("raw meat");
                 gameState.kitchenCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 1;
             } else {
-                print("Nothing else here.");
+                print("Nothing to look for here. (No time used up)");
             }
         }
         else {
-            print("Nothing to look for here.");
+            print("Nothing to look for here. (No time used up)");
         }
     }
 
     function showActions() {
-        print("\nAvailable actions:\n\"Look\" - [5 min] Search room.\n\"Move\" - Change room.\n\"Trap\" - [10 min] Place trap.\n\"Inventory\"\n\"Keys\"");
+        print("\nAvailable actions:\n\"Look\" - [5 min] Search room.\n\"Move\" - Change room.\n\"Trap\" - [10 min] Place trap.");
         if (gameState.room === "bedroom") {
-            if (gameState.inventory.includes("sharp knife")) print("\"Rope\" - [1min] Cut rope.");
-            else print("\"Get rope\" - [5min] Cut rope.");
-            if (gameState.bedroomCheck === 1) print("\"Firewood\" - [3min] get firewood (needs rope).");
-            if (gameState.keys.includes("office key")) print("\"Unlock\" - Unlock office.");
+            if (gameState.inventory.includes("sharp knife")) print(\"Get rope\" - [1min] Cut off some of the rope. Now that you have a sharper knife, you can do it quicker.");
+            else print("\"Get rope\" - [5min] Cut off some of the rope. Useful, but will take a while to cut with such a small knife.");
+            if (gameState.bedroomCheck === 1) print("\"Firewood\" - [3min] get the firewood. Rope is needed to tie it together if you want to carry it.");
+            if (gameState.keys.includes("office key")) print("\"Unlock\" - Unlock the office.");
         }
-        if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) print("\"Unlock\" - Unlock trophy room.");
-        if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1) print("\"Unlock\" - Unlock firearm locker.");
-        if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) print("\"Unlock\" - Unlock entrance.");
+        if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) print("\"Unlock\" - Unlock the trophy room.");
+        if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1) print("\"Unlock\" - Unlock the firearm locker.");
+        if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) print("\"Unlock\" - Unlock the entrance door.");
     }
 
     function updateButtons(){
@@ -494,7 +498,7 @@
                 gameState.room = "corridor";
                 print("You moved to the corridor.");
                 if (!gameState.corridorSeen) {
-                    print("The corridor is dark. 4 doors, all labeled.");
+                    print("The corridor is dark but not too long. Surprisingly empty too. Unless there are any secret compartments here, you doubt you could find anything worthwhile. There are four doors, all labeled. What is this person's deal with labeling rooms?");
                     gameState.corridorSeen = true;
                 }
                 moved = true;
@@ -510,7 +514,7 @@
                 gameState.room = "office";
                 print("You moved to the office.");
                 if (!gameState.officeSeen) {
-                    print("Smell of dust and papers. Hunting equipment.");
+                    print("When you enter the room, the first things you notice are the strong smell of dust and mountains of papers scattered about. Many of them seem to be personal documents of various different people... There is also a variety of equipment for hunting and fishing. No guns though, sadly. There are no doors except for the one you entered through.");
                     gameState.officeSeen = true;
                 }
                 moved = true;
@@ -523,7 +527,7 @@
                 gameState.room = "trophy";
                 print("You moved to the trophy room.");
                 if (!gameState.trophySeen) {
-                    print("Mounted animal heads everywhere.");
+                    print("Mounted animal heads. So many of them. You don't think there is an inch of a wall that doesn't have one or some other kind of hunting trophy. A few cabinets are placed haphazardly around the room, as well as pedestals with full-body taxidermied animals. Even the chandelier is made of deer antlers. You can't tell if the host absolutely loves or hates animals, but they seem to feel very strongly about it.");
                     gameState.trophySeen = true;
                 }
                 moved = true;
@@ -536,7 +540,7 @@
                 gameState.room = "kitchen";
                 print("You moved to the kitchen.");
                 if (!gameState.kitchenSeen) {
-                    print("Smell of raw meat.");
+                    print("A normal kitchen - fridge, counters, a sink, some cabinets. There is a strong smell of raw meat, so you doubt you will find anything else here.");
                     gameState.kitchenSeen = true;
                 }
                 moved = true;
@@ -549,8 +553,9 @@
                 gameState.room = "entrance";
                 print("You moved to the entrance room.");
                 if (!gameState.entranceSeen) {
-                    print("Barren room. Bulletproof window. Locked door.");
-                    gameState.entranceSeen = true;
+                  print("It is quite barren, but not the the same extent the corridor is. There are a few chairs, a table, and a chandelier at least. You notice that the only window in the room has a circular pattern of cracks on it, almost like a spiderweb. It seems it has been shot at once, and has turned out to be bullet proof. You think it is safe to assume that all of the other windows are reinforced too, meaning that the only exit is the door here.");
+                  print("You try the handle of the front door. It's locked. Sadly, it seems your captor actually does have some sense in them. You push a chair up against it. Just in case.\n");
+                  gameState.entranceSeen = true;
                 }
                 moved = true;
                 hideAllMovement();

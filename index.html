@@ -417,7 +417,7 @@
         }
         else if (gameState.room === "kitchen") {
             if (gameState.kitchenCheck === 0) {
-                print("ou have found an office key, and a sharp knife. You feel like you have missed some things... Maybe you should have a look again sometime?");
+                print("You have found an office key, and a sharp knife. You feel like you have missed some things... Maybe you should have a look again sometime?");
                 gameState.inventory.push("sharp knife");
                 gameState.keys.push("office key");
                 gameState.kitchenCheck++;
@@ -447,7 +447,7 @@
     function showActions() {
         print("\nAvailable actions:\n\"Look\" - [5 min] Search room.\n\"Move\" - Change room.\n\"Trap\" - [10 min] Place trap.");
         if (gameState.room === "bedroom") {
-            if (gameState.inventory.includes("sharp knife")) print(\"Get rope\" - [1min] Cut off some of the rope. Now that you have a sharper knife, you can do it quicker.");
+            if (gameState.inventory.includes("sharp knife")) print("\"Get rope\" - [1min] Cut off some of the rope. Now that you have a sharper knife, you can do it quicker.");
             else print("\"Get rope\" - [5min] Cut off some of the rope. Useful, but will take a while to cut with such a small knife.");
             if (gameState.bedroomCheck === 1) print("\"Firewood\" - [3min] get the firewood. Rope is needed to tie it together if you want to carry it.");
             if (gameState.keys.includes("office key")) print("\"Unlock\" - Unlock the office.");

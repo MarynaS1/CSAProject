@@ -103,7 +103,7 @@
           <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
           <input type="button" id="(Action descriptions)" onclick="buttonInput('(Action descriptions)')" value="(Action descriptions)">
         </div>
-        <p>Movement:</p>
+        <p id="movementText">Movement:</p>
         <div class="choices">
           <input type="button" id="Trophy room" onclick="buttonInput('Trophy room')" value="Trophy room">
           <input type="button" id="Office" onclick="buttonInput('Office')" value="Office">
@@ -112,6 +112,16 @@
           <input type="button" id="Kitchen" onclick="buttonInput('Kitchen')" value="Kitchen">
           <input type="button" id="Bedroom" onclick="buttonInput('Bedroom')" value="Bedroom">
           <input type="button" id="Corridor" onclick="buttonInput('Corridor')" value="Corridor">
+        </div>
+        <p id="trapText">Trap options:</p>
+        <div class="choices">
+          <input type="button" id="Use rope" onclick="buttonInput('Use rope')" value="Use rope">
+          <input type="button" id="Use taxidermized fox" onclick="buttonInput('Use taxidermized fox')" value="Use taxidermized fox">
+          <input type="button" id="Use sharp knife" onclick="buttonInput('Use sharp knife')" value="Use sharp knife">
+          <input type="button" id="Use fishing rod" onclick="buttonInput('Use fishing rod')" value="Use fishing rod">
+          <input type="button" id="Use bottled water" onclick="buttonInput('Use bottled water')" value="Use bottled water">
+          <input type="button" id="Use nothing" onclick="buttonInput('Use nothing')" value="Use nothing">
+          <input type="button" id="Cancel" onclick="buttonInput('Cancel')" value="Cancel">
         </div>
       </div>
     </div>
@@ -183,8 +193,11 @@
         hideButton("Unlock");
         hideButton("Get rope");
         hideButton("Get firewood");
+        hideButton("movementText");
+        hideButton("trapText");
       
         hideAllMovement();
+        hideAllTraps();
     }
 
     // Handle Enter Key
@@ -323,7 +336,7 @@
             // Note: The provided code cut off in the middle of this logic.
             // I have implemented the structure based on what was provided.
             
-            if (input === "actions" || input === "help") {
+            if (input === "actions") {
                 let actions = "\nAvailable actions:\n\"Move\" - Choose a room to move to. \n\"Attack\" - Attack the host with a weapon.\n\"Hide\" - Hide from the host.\n\"Wait\" - Skip one action.";
                 print(actions);
             } 
@@ -359,6 +372,7 @@
         showButton("Place trap");
         showButton("Corridor");
         showButton("Get rope");
+        showButton("movementText");
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
@@ -602,11 +616,14 @@
 
     function initTrap() {
         print("Setting a trap takes 10 minutes. Or 3 minutes if you use an item:");
-        if (gameState.inventory.includes("rope")) print("rope");
-        if (gameState.inventory.includes("taxidermied fox?")) print("taxidermied fox?");
-        if (gameState.inventory.includes("sharp knife")) print("sharp knife");
-        if (gameState.inventory.includes("fishing rod")) print("fishing rod");
-        if (gameState.inventory.includes("bottled water")) print("bottled water");
+        showButton("trapText");
+        if (gameState.inventory.includes("rope")) showButton("Use rope");
+        if (gameState.inventory.includes("taxidermied fox?")) showButton("Use taxidermied fox");
+        if (gameState.inventory.includes("sharp knife")) showButton("Use sharp knife");
+        if (gameState.inventory.includes("fishing rod")) showButton("Use fishing rod");
+        if (gameState.inventory.includes("bottled water")) showButton("Use bottled water");
+        showButton("Use nothing");
+        showButton("Cancel");
         
         print("Type the item name, or 'none'.");
         gameState.makingTrap = true;
@@ -616,10 +633,7 @@
         if (input === "none") {
             print("You set a trap manually.");
             gameState.time -= 10;
-        } else if (gameState.inventory.includes(input) || (input === "fox" && gameState.inventory.includes("taxidermied fox?")) || (input === "water" && gameState.inventory.includes("bottled water"))) {
-            // Simplification for the sake of the demo
-            if (input === "fox") input = "taxidermied fox?";
-            if (input === "water") input = "bottled water";
+        } else if (gameState.inventory.includes(input)) {
             
             let idx = gameState.inventory.indexOf(input);
             gameState.inventory.splice(idx, 1);
@@ -630,6 +644,7 @@
         }
         gameState.makingTrap = false;
         print("Trap set in " + gameState.room);
+        hideAllTraps();
     }
 
     function initSection3() {
@@ -656,6 +671,7 @@
     function hideButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "none";
     }
+
     function showButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "inline-block";
     }
@@ -667,6 +683,15 @@
       hideButton("Office");
       hideButton("Corridor");
       hideButton("Outside");
+    }
+    function hideAllTraps(){
+      hideButton("Use rope");
+      hideButton("Use taxidermized fox");
+      hideButton("Use sharp knife");
+      hideButton("Use fishing rod");
+      hideButton("Use bottled water");
+      hideButton("Use nothing");
+      hideButton("Cancel");
     }
     // Start
     startGame();

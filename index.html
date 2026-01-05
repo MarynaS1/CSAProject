@@ -127,6 +127,7 @@
       </div>
     </div>
     <script>
+    try{
     // --- GAME VARIABLES (STATE) ---
     let gameState = {
         section: 1, // 1 = Intro, 2 = House, 3 = Host
@@ -663,6 +664,9 @@
         }
         gameState.makingTrap = false;
         hideAllTraps();
+    }
+    } catch(error){
+      alert("everything else error");
     }
     try{
     function initSection3() {

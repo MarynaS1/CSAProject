@@ -707,7 +707,7 @@
           if(gameState.hiding){
             if(repeat===false) print("You manage to avoid the host. Their eyes don't fall on your hiding spot.");
             else{
-              if(Math.floor((Math.random()*50)>65)){
+              if((Math.floor(Math.random()*50))>65){
                 print("Your hiding spot fails\n");
                 print("You are noticed and the figure quickly moves toward you and attacks you! You feel a burst of pain and adrenaline.(You gain an aditional action for 1 turn)\n");
                 gameState.playerActions+=1;

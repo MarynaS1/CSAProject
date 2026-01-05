@@ -186,7 +186,7 @@
     }
     function updateInventory(text){
       gameState.inventory.push(text);
-      inventoryDiv.innerHTML = gamestate.inventory;
+      inventoryDiv.innerHTML = gamestate.inventory.toString();
     }
     function removeItem(input){
       let idx = gameState.inventory.indexOf(input);

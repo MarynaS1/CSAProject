@@ -127,11 +127,10 @@
       </div>
     </div>
     <script>
-    try{
     // --- GAME VARIABLES (STATE) ---
     let gameState = {
         section: 1, // 1 = Intro, 2 = House, 3 = Host
-        subState: "start", // used for pauses like scan.nextLine()
+        subState: "start",
         inventory: [],
         keys: [],
         room: "bedroom",
@@ -228,9 +227,7 @@
     // --- MAIN LOGIC ---
 
     function buttonInput(buttonValue) {
-        //let input = inputField.value.trim().toLowerCase();
         let input = buttonValue;
-        //inputField.value = ""; // Clear input
         print("> " + input); // Echo user input
 
         // --- SECTION 1: INTRO ---
@@ -328,7 +325,7 @@
           if(gameState.injuries>5){
             print("\nEverything hurts... You've been hit too many times. Your vision darkens...");
             print("(You lost... Try again?)");
-            playAgain();
+            //playAgain();
           }
           else if(gameState.playerActions===0){
             hostTurn();
@@ -664,11 +661,6 @@
         }
         gameState.makingTrap = false;
         hideAllTraps();
-    }
-    } catch(error){
-      alert("everything else error");
-    }
-    try{
     function initSection3() {
         if (!gameState.reachedExit) {
             gameState.entranceUnlocked=true;
@@ -691,11 +683,6 @@
             print("You escaped the house successfully!");
             print("Final Survival Points: " + gameState.survivalPoints);
         }
-    }
-    catch(error){
-      alert("initSection3 error");
-    }
-    try{
     function hostTurn() {
       if(gameState.hostStall===true){
         print("The host is stalled. They will not act right now.");
@@ -739,9 +726,7 @@
       }
       gameState.playerActions = 2;
     }
-    } catch(error){
-      alert("hostTurn error");
-    }
+
     function hideButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "none";
     }

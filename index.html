@@ -348,7 +348,7 @@
             else if(input === "Trophy room" || input === "Office" || input === "Outside" || input === "Entrance room" || input === "Kitchen" || input === "Bedroom" || input === "Corridor"){
               handleMovement(input);
               gameState.playerActions--;
-              hiding=false;
+              gameState.hiding=false;
               if(room === hostRoom){
                 print("As you open the door you see a tall figure searching around the room.");
                 hostTurn();

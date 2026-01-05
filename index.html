@@ -186,12 +186,12 @@
     }
     function updateInventory(text){
       gameState.inventory.push(text);
-      inventoryDiv.innerHTML = gamestate.inventory.toString();
+      inventoryDiv.innerHTML += text + ", ";
     }
     function removeItem(input){
       let idx = gameState.inventory.indexOf(input);
       gameState.inventory.splice(idx, 1);
-      inventoryDiv.innerHTML = gamestate.inventory;
+      inventoryDiv.innerHTML = inventoryDiv.innerHTML.replace((input+", "),"");
       
     }
     function updateKeys(text){

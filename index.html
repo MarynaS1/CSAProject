@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!--To-do: attack, section 4-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Text game</title>
@@ -84,11 +85,6 @@
       <div id="game-container">
         <div id="output"></div>
       </div>
-      <!--<div class="user-input-area">
-        <input type="text" id="user-input" placeholder="..." autofocus autocomplete="off">
-        <button onclick="handleInput()">Submit</button>
-      </div>-->
-      
       <div id="actions">
         <p id="inventoryText">Inventory:</p>
         <div id="inventory"></div>
@@ -98,12 +94,17 @@
         <div class="choices">
           <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
           <input type="button" id="2" onclick="buttonInput('2')" value="Examine yourself">
+          
           <input type="button" id="Look" onclick="buttonInput('Look')" value="Look">
           <input type="button" id="Place trap" onclick="buttonInput('Place trap')" value="Place trap">
           <input type="button" id="Unlock" onclick="buttonInput('Unlock')" value="Unlock">
           <input type="button" id="Get rope" onclick="buttonInput('Get rope')" value="Get rope">
           <input type="button" id="Get firewood" onclick="buttonInput('Get firewood')" value="Get firewood">
           <input type="button" id="(Action descriptions)" onclick="buttonInput('(Action descriptions)')" value="(Action descriptions)">
+          
+          <input type="button" id="Hide" onclick="buttonInput('Hide')" value="Hide">
+          <input type="button" id="Wait" onclick="buttonInput('Wait')" value="Wait">
+          <input type="button" id="Attack" onclick="buttonInput('Attack')" value="Attack">
         </div>
         <p id="movementText">Movement:</p>
         <div class="choices">
@@ -128,9 +129,7 @@
       </div>
     </div>
     <script>
-    // Gonna have to fix this ai bs later
     // --- GAME VARIABLES (STATE) ---
-    // These replace the local variables in your Java Main method
     let gameState = {
         section: 1, // 1 = Intro, 2 = House, 3 = Host
         subState: "start", // used for pauses like scan.nextLine()
@@ -164,12 +163,19 @@
 
         // Traps
         makingTrap: false,
+        trappedRooms:[],
         
         // Host Section
         reachedExit: false,
         playerActions: 2,
+        hostPath: ["entrance room","corridor","bedroom","office","bedroom","corridor","kitchen","corridor","trophy room","corridor"]
         hostRoom: "none",
+        hostRoomId: -1;
+        hostStall: false;
+        hostRepeat: false;
         injuries: 0
+        hiding: false,
+        rifleUsed: false;
     };
 
     // --- UTILITY FUNCTIONS ---
@@ -213,17 +219,12 @@
         hideButton("trapText");
         hideButton("inventoryText");
         hideButton("keysText");
-      
+        hideButton("Hide");
+        hideButton("Wait");
+        hideButton("Attack");      
         hideAllMovement();
         hideAllTraps();
     }
-
-    // Handle Enter Key
-    /*inputField.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            handleInput();
-        }
-    });*/
 
     // --- MAIN LOGIC ---
 
@@ -281,25 +282,7 @@
             if (input === "Look") {
                 handleLook();
             }
-            /*else if (input === "move") {
-                print("\nChoose a room to move to:");
-                print("Stay");
-                if (gameState.room === "bedroom") {
-                    print("Corridor");
-                    if (gameState.officeUnlocked) print("Office");
-                } else if (gameState.room === "office") {
-                    print("Bedroom");
-                } else if (gameState.room === "corridor") {
-                    print("Bedroom\nEntrance room\nKitchen");
-                    if (gameState.trophyUnlocked) print("Trophy room");
-                } else if (gameState.room === "entrance") {
-                    print("Corridor");
-                    if (gameState.entranceUnlocked) print("Outside");
-                } else if (gameState.room === "kitchen" || gameState.room === "trophy") {
-                    print("Corridor");
-                }
-                gameState.subState = "moving"; // Expect next input to be a room
-            }*/
+
             else if(input === "Trophy room" || input === "Office" || input === "Outside" || input === "Entrance room" || input === "Kitchen" || input === "Bedroom" || input === "Corridor"){
               handleMovement(input);
             }
@@ -332,16 +315,6 @@
                 updateInventory("firewood");
                 
             }
-            /*else if (input === "exit") {
-                // Debug exit
-                print("SECTION EXITED");
-                gameState.section = 3;
-                initSection3();
-            }
-            else if (input === "moretime") {
-                gameState.time = 360;
-                print("Time set to 360.");
-            }*/
             else if (input === "(Action descriptions)"){
               showActions();
             }
@@ -351,33 +324,53 @@
         }
 
         // --- SECTION 3: THE HOST ---
+          
         else if (gameState.section === 3) {
-            // Note: The provided code cut off in the middle of this logic.
-            // I have implemented the structure based on what was provided.
-            
+          if(gameState.injuries>5){
+            print("\nEverything hurts... You've been hit too many times. Your vision darkens...");
+            print("(You lost... Try again?)");
+            playAgain();
+          }
+          else if(gameState.playerActions===0){
+            hostTurn();
+          }
+          else{
             if (input === "actions") {
                 let actions = "\nAvailable actions:\n\"Move\" - Choose a room to move to. \n\"Attack\" - Attack the host with a weapon.\n\"Hide\" - Hide from the host.\n\"Wait\" - Skip one action.";
                 print(actions);
-            } 
-            else if (input === "move") {
-                // Basic move prompt from Section 3
-                 print("\nChoose a room to move to (Stay, Bedroom, Corridor, etc):");
-                 gameState.subState = "section3_moving";
             }
-            else if (gameState.subState === "section3_moving") {
-                handleMovement(input); // Reusing logic for now
-                gameState.playerActions--;
-                gameState.subState = "";
-                checkTurn();
+            else if(input === "Hide"){
+                if((room === "corridor")){
+                  print("Nowhere to hide here. (no actions taken)");
+                }
+                else{
+                  print("You are now hiding.");
+                  hiding=true;
+                  gameState.playerActions--;
+                }
             }
+            else if(input === "Trophy room" || input === "Office" || input === "Outside" || input === "Entrance room" || input === "Kitchen" || input === "Bedroom" || input === "Corridor"){
+              handleMovement(input);
+              gameState.playerActions--;
+              hiding=false;
+              if(room === hostRoom){
+                print("As you open the door you see a tall figure searching around the room.");
+                hostTurn();
+              }
+            }
+
             else if (input === "Wait") {
                 print("You wait.");
                 gameState.playerActions--;
                 checkTurn();
             }
+            else if(input === "Attack"){
+              
+            }
             else {
                 print("Not an option");
             }
+          }
         }
     }
 
@@ -626,7 +619,7 @@
             print("Trophy room unlocked.");
             gameState.trophyUnlocked = true;
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
-            print("Firearm locker unlocked. Inside is a loaded rifle.");
+            print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
@@ -653,28 +646,45 @@
 
     function handleTrapInput(input) {
         input = input.substring(4);
-        if (input === "Use nothing") {
+        if(gameState.trappedRooms.includes(room)){
+          print("There is already a trap set in this room. You doubt you could place more without making it difficult to move through yourself, so you abandon the idea.")
+        }
+        else{
+          if (input === "Use nothing") {
             print("You set a trap manually.");
             gameState.time -= 10;
-        } else if (gameState.inventory.includes(input)) {
-            
-            removeItem(input);
-            print("You used " + input + " for a trap.");
-            gameState.time -= 3;
-        } else {
-            print("Invalid item.");
-            print("DEBUG: INPUT WAS '"+input+"'");
+            print("Trap set in " + gameState.room);
+            gameState.trappedRooms.push(room);
+          } else if (gameState.inventory.includes(input)) {
+              
+              removeItem(input);
+              print("You used " + input + " for a trap.");
+              gameState.time -= 3;
+          } else {
+              print("You can't use this item.");
+          }
         }
         gameState.makingTrap = false;
-        print("Trap set in " + gameState.room);
         hideAllTraps();
     }
 
     function initSection3() {
         if (!gameState.reachedExit) {
+            gameState.entranceUnlocked=true;
+            print("Right as you finished doing this, you hear someone ");
+            if(gameState.entranceSeen){
+              print("try to open the entrance door, the chair you set up blocking their way.");
+            }
+            else {
+              print("open the entrance door, fumbling with their keys for a few moments.");
+            }
+            print("It seems you are out of time. You need to get out of here. Although… maybe you are able to put up a fight with the host?\n");
             print("\nSECTION 3: THE HOST\n");
-            print("Someone tries to open the entrance door. The host is here.");
-            print("(Tutorial: Turn based. 2 Actions per turn. Move, Attack, Hide, Wait.)");
+            showButton("Hide");
+            showButton("Wait");
+            showButton("Attack");
+            print("(Tutorial: You start before the host. On your turn, you can use two available actions before the host, including moving to a different room (Your options have changed. To see the new actions, press the (Action descriptions) button). Either reach the entrance room and try your chances at surviving outside with what you have, or fight the host. If you manage to defeat them, you are guaranteed to survive the wilderness.");
+            print("If the host notices you being in the same room as them, they will injure you. Injuries lower your chances of traversing the wilderness alive, but you get one more action immediately after receiving one. Talk about adrenaline!)");
         } else {
             print("\nCONGRATULATIONS!");
             print("You escaped the house successfully!");
@@ -682,14 +692,48 @@
         }
     }
 
-    function checkTurn() {
-        if (gameState.playerActions <= 0) {
-            print("\n--- HOST TURN ---");
-            print("The host moves around the house...");
-            // Host logic would go here (random movement based on the array in your code)
-            gameState.playerActions = 2;
-            print("\n--- YOUR TURN ---");
+    function hostTurn() {
+      if(gameState.hostStall===true){
+        print("The host is stalled. They will not act right now.");
+        gameState.hostStall=false;
+      }
+      else{
+        if (!(gameState.room===gameState.hostRoom)) {
+          print("You hear the host shuffle around the house...");
+          gameState.hostRoomId++;
+          if(gameState.hostRoomId>9){
+            gameState.hostRoomId=0;
+            gameState.hostRepeat=true;
+          }
+          gameState.hostRoom=gameState.hostPath[gameState.hostRoomId];
+          if(gameState.trappedRooms.includes(gameState.hostRoom)){
+            print("The host set off a trap!");
+            gameState.hostStall=true;
+            gameState.trappedRooms=gameState.trappedRooms.splice(hostRoomId);
+          }
         }
+        if(gameState.room===gameState.hostRoom){
+          if(gameState.hiding){
+            if(repeat===false) print("You manage to avoid the host. Their eyes don't fall on your hiding spot.");
+            else{
+              if(Math.floor((Math.random()*50)>65)){
+                print("Your hiding spot fails\n");
+                print("You are noticed and the figure quickly moves toward you and attacks you! You feel a burst of pain and adrenaline.(You gain an aditional action for 1 turn)\n");
+                gameState.playerActions+=1;
+                gameState.injuries+=1;
+                gameState.hiding=false;
+              }
+              else print("You manage to avoid the host. Their eyes don't fall on your hiding spot.");
+            }
+          }
+          else{
+            print("You are noticed and the figure quickly moves toward you and attacks you! You feel a burst of pain and adrenaline.(You gain an aditional action for 1 turn)");
+            gameState.playerActions+=1;
+            gameState.injuries+=1;
+          }
+        }
+      }
+      gameState.playerActions = 2;
     }
     function hideButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "none";

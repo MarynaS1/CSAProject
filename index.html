@@ -90,8 +90,8 @@
       </div>-->
       
       <div id="actions">
-        <p>INVENTORY</p>
-        <p>KEYS</p>
+        <div id="inventory"></div>
+        <div id="keys"></div>
         <p>Actions:</p>
         <div class="choices">
           <input type="button" id="1" onclick="buttonInput('1')" value="Look around">
@@ -173,7 +173,8 @@
     // --- UTILITY FUNCTIONS ---
     
     const outputDiv = document.getElementById('output');
-    const inputField = document.getElementById('user-input');
+    const inventoryDiv = document.getElementById('inventory');
+    const keyDiv = document.getElementById('keys');
 
     function print(text) {
         // Appends text to the div
@@ -181,7 +182,14 @@
         // Auto scroll to bottom
         document.getElementById('game-container').scrollTop = document.getElementById('game-container').scrollHeight;
     }
-
+    function updateInventory(text){
+      inventoryDiv.innerHTML += text + ", ";
+      updateInventory(text);
+    }
+    function updateKeys(text){
+      keyDiv.innerHTML += text + ", ";
+      gameState.keys.push(text);
+    }
     function startGame() {
         // Init Section 1
         gameState.inventory = [];
@@ -301,17 +309,18 @@
             else if (input === "Rope") {
                  if (gameState.inventory.includes("sharp knife")) {
                     print("You cut the rope with the sharp knife.");
-                    gameState.inventory.push("rope");
+                    updateInventory("rope");
                     gameState.time -= 1;
                 } else {
                     print("You cut the rope with the small knife.");
-                    gameState.inventory.push("rope");
+                    updateInventory("rope");
                     gameState.time -= 5;
                 }
             }
             else if ((input === "Firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
                 print("You tied the firewood together with the rope. Now you can carry it.");
-                gameState.inventory.push("firewood");
+                updateInventory("firewood");
+                
             }
             /*else if (input === "exit") {
                 // Debug exit
@@ -377,8 +386,8 @@
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
         
-        gameState.inventory.push("food");
-        gameState.inventory.push("Small knife");
+        updateInventory("food");
+        updateInventory("Small knife");
         print("(Tutorial: You have a certain amount of time before host returns. You do not know how much that is. You can spend this time [min] to do certain actions. To see what the actions do and how much time they take, press the (Action descriptions) button.");
     }
 
@@ -388,8 +397,8 @@
                 print("You have found an entrance key, lighter, and some firewood. You cannot get firewood yet, because you need rope to tie it so that you can carry it.");
                 print("(When you get the rope, the choice to collect the firewood should appear)");
                 print("Other than that, you think you found everything here.");
-                gameState.keys.push("entrance key");
-                gameState.inventory.push("lighter");
+                updateKeys("entrance key");
+                updateInventory("lighter");
                 gameState.bedroomCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 1;
@@ -400,17 +409,17 @@
         else if (gameState.room === "office") {
             if (gameState.officeCheck === 0) {
                 print("You have found a trophy room key, a fishing rod and bait. You feel like you have missed some things... Maybe you should have a look again sometime?");
-                gameState.keys.push("trophy room key");
-                gameState.inventory.push("fishing rod");
-                gameState.inventory.push("bait");
+                updateKeys("trophy room key");
+                updateInventory("fishing rod");
+                updateInventory("bait");
                 gameState.officeCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 2;
             } else if (gameState.officeCheck === 1) {
                 print("You have found a few blank pieces of paper, a map of the surrounding area, and a firearm locker key. You think you found everything here.");
-                gameState.inventory.push("paper");
-                gameState.inventory.push("map of the surroundings");
-                gameState.keys.push("firearm locker key");
+                updateInventory("paper");
+                updateInventory("map of the surroundings");
+                updateKeys("firearm locker key");
                 gameState.officeCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 3;
@@ -423,7 +432,7 @@
                   print("You have found a firearm locker, but you're goint to need to use a key in your actions to unlock it...");
                   print("You have also found a taxidermied fox! Sure, not a very surprising find in this room, but something about it seems very... entrancing...");
                   print("After staring at it for a straight minute, you break out of it. Whatever this thing actually is, you think you can use it for a trap or distraction.\n");
-                 gameState.inventory.push("taxidermied fox?");
+                 updateInventory("taxidermied fox?");
                  gameState.trophyCheck++;
                  gameState.time -= 6;
              } else {
@@ -433,8 +442,8 @@
         else if (gameState.room === "kitchen") {
             if (gameState.kitchenCheck === 0) {
                 print("You have found an office key, and a sharp knife. You feel like you have missed some things... Maybe you should have a look again sometime?");
-                gameState.inventory.push("sharp knife");
-                gameState.keys.push("office key");
+                updateInventory("sharp knife");
+                updateKeys("office key");
                 gameState.kitchenCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 2;
@@ -445,8 +454,8 @@
                     gameState.survivalPoints += 2;
                 }
                 else print("The meat will be useless if you dont have any firewood to cook it on though. You think you found everything here.");
-                gameState.inventory.push("bottled water");
-                gameState.inventory.push("raw meat");
+                updateInventory("bottled water");
+                updateInventory("raw meat");
                 gameState.kitchenCheck++;
                 gameState.time -= 5;
                 gameState.survivalPoints += 1;
@@ -474,8 +483,6 @@
 
     function updateButtons(){
       if (gameState.room === "bedroom") {
-        if (gameState.inventory.includes("sharp knife")) showButton("Get rope");
-        else hideButton("Get rope");
         if (gameState.bedroomCheck === 1 && gamestate.inventory.includes("rope")) showButton("Get firewood");
         else hideButton("Get firewood");
         if (gameState.keys.includes("office key")) showButton("Unlock");
@@ -605,7 +612,7 @@
             gameState.trophyUnlocked = true;
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle.");
-            gameState.inventory.push("loaded rifle");
+            updateInventory("loaded rifle");
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;
@@ -630,7 +637,7 @@
     }
 
     function handleTrapInput(input) {
-        if (input === "none") {
+        if (input === "Use nothing") {
             print("You set a trap manually.");
             gameState.time -= 10;
         } else if (gameState.inventory.includes(input)) {

@@ -185,8 +185,14 @@
         document.getElementById('game-container').scrollTop = document.getElementById('game-container').scrollHeight;
     }
     function updateInventory(text){
-      inventoryDiv.innerHTML += text + ", ";
       gameState.inventory.push(text);
+      inventoryDiv.innerHTML = gamestate.inventory;
+    }
+    function removeItem(input){
+      let idx = gameState.inventory.indexOf(input);
+      gameState.inventory.splice(idx, 1);
+      inventoryDiv.innerHTML = gamestate.inventory;
+      
     }
     function updateKeys(text){
       keyDiv.innerHTML += text + ", ";
@@ -652,8 +658,7 @@
             gameState.time -= 10;
         } else if (gameState.inventory.includes(input)) {
             
-            let idx = gameState.inventory.indexOf(input);
-            gameState.inventory.splice(idx, 1);
+            removeItem(input);
             print("You used " + input + " for a trap.");
             gameState.time -= 3;
         } else {

@@ -349,7 +349,7 @@
               handleMovement(input);
               gameState.playerActions--;
               gameState.hiding=false;
-              if(room === hostRoom){
+              if(gameState.room === gameState.hostRoom){
                 print("As you open the door you see a tall figure searching around the room.");
                 hostTurn();
               }

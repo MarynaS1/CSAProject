@@ -641,7 +641,7 @@
 
     function handleTrapInput(input) {
         input = input.substring(4);
-        if(gameState.trappedRooms.includes(room)){
+        if(gameState.trappedRooms.includes(gameState.room)){
           print("There is already a trap set in this room. You doubt you could place more without making it difficult to move through yourself, so you abandon the idea.")
         }
         else{
@@ -649,7 +649,7 @@
             print("You set a trap manually.");
             gameState.time -= 10;
             print("Trap set in " + gameState.room);
-            gameState.trappedRooms.push(room);
+            gameState.trappedRooms.push(gameState.room);
           } else if (gameState.inventory.includes(input)) {
               
               removeItem(input);

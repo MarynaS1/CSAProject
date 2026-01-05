@@ -664,7 +664,7 @@
         gameState.makingTrap = false;
         hideAllTraps();
     }
-
+    try{
     function initSection3() {
         if (!gameState.reachedExit) {
             gameState.entranceUnlocked=true;
@@ -688,7 +688,10 @@
             print("Final Survival Points: " + gameState.survivalPoints);
         }
     }
-
+    catch(error){
+      alert("initSection3 error");
+    }
+    try{
     function hostTurn() {
       if(gameState.hostStall===true){
         print("The host is stalled. They will not act right now.");
@@ -731,6 +734,9 @@
         }
       }
       gameState.playerActions = 2;
+    }
+    } catch(error){
+      alert("hostTurn error");
     }
     function hideButton(ButtonId) {
     document.getElementById(ButtonId).style.display = "none";

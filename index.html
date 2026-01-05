@@ -90,7 +90,9 @@
       </div>-->
       
       <div id="actions">
+        <p id="inventoryText">Inventory:</p>
         <div id="inventory"></div>
+        <p id="keysText">Keys:</p>
         <div id="keys"></div>
         <p>Actions:</p>
         <div class="choices">
@@ -184,7 +186,7 @@
     }
     function updateInventory(text){
       inventoryDiv.innerHTML += text + ", ";
-      updateInventory(text);
+      gameState.inventory.push(text);
     }
     function updateKeys(text){
       keyDiv.innerHTML += text + ", ";
@@ -203,6 +205,8 @@
         hideButton("Get firewood");
         hideButton("movementText");
         hideButton("trapText");
+        hideButton("inventoryText");
+        hideButton("keysText");
       
         hideAllMovement();
         hideAllTraps();
@@ -382,6 +386,8 @@
         showButton("Corridor");
         showButton("Get rope");
         showButton("movementText");
+        showButton("inventoryText");
+        showButton("keysText");
         print("\nSECTION 2: THE HOUSE\n");
         gameState.time = Math.floor(Math.random() * 31) + 10;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");

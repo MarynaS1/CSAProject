@@ -343,7 +343,7 @@
                 }
                 else{
                   print("You are now hiding.");
-                  hiding=true;
+                  gameState.hiding=true;
                   gameState.playerActions--;
                 }
             }
@@ -360,11 +360,10 @@
             else if (input === "Wait") {
                 print("You wait.");
                 gameState.playerActions--;
-                checkTurn();
             }
-            else if(input === "Attack"){
+            /*else if(input === "Attack"){
               
-            }
+            }*/
             else {
                 print("Not an option");
             }

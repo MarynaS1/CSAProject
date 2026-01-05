@@ -700,7 +700,7 @@
           if(gameState.trappedRooms.includes(gameState.hostRoom)){
             print("The host set off a trap!");
             gameState.hostStall=true;
-            gameState.trappedRooms=gameState.trappedRooms.splice(hostRoomId);
+            gameState.trappedRooms=gameState.trappedRooms.splice(gameState.hostRoomId);
           }
         }
         if(gameState.room===gameState.hostRoom){

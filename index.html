@@ -312,7 +312,7 @@
                 hideButton("Get rope");
                 showButton("Get firewood");
             }
-            else if ((input === "Firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
+            else if ((input === "Get firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
                 print("You tied the firewood together with the rope. Now you can carry it.");
                 updateInventory("firewood");
                 
@@ -492,15 +492,33 @@
 
     function updateButtons(){
       if (gameState.room === "bedroom") {
-        if (gameState.bedroomCheck === 1 && gamestate.inventory.includes("rope")) showButton("Get firewood");
+        if(!(gameState.inventory.includes("rope") || gameState.inventory.includes("firewood")))showButton("Get rope");
+        else hideButton("Get rope");
+        if (gameState.bedroomCheck === 1 && gamestate.inventory.includes("rope") && (!(gameState.inventory.includes("firewood")))) showButton("Get firewood");
         else hideButton("Get firewood");
         if (gameState.keys.includes("office key")) showButton("Unlock");
         else hideButton("Unlock");
       }
-      else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) showButton("Unlock");
-      else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1) showButton("Unlock");
-      else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) showButton("Unlock");
-      else hideButton("Unlock");
+      else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")){
+        showButton("Unlock");
+        hideButton("Get rope");
+        hideButton("Get firewood");
+      }
+      else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1){
+        showButton("Unlock");
+        hideButton("Get rope");
+        hideButton("Get firewood");
+      }
+      else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")){
+        showButton("Unlock");
+        hideButton("Get rope");
+        hideButton("Get firewood");
+      }
+      else{
+        hideButton("Unlock");
+        hideButton("Get rope");
+        hideButton("Get firewood");
+      }
     }
 
     function handleMovement(dest) {
@@ -521,7 +539,6 @@
                 moved = true;
                 hideAllMovement();
                 showButton("Corridor");
-                showButton("Get rope");//crutch
                 if(gameState.officeUnlocked) showButton("Office");
             }
         }
@@ -529,7 +546,6 @@
             if (["bedroom", "trophy", "kitchen", "entrance", "corridor"].includes(gameState.room)) {
                 gameState.room = "corridor";
                 print("You moved to the corridor.");
-                hideButton("Get rope");//crutch
                 if (!gameState.corridorSeen) {
                     print("The corridor is dark but not too long. Surprisingly empty too. Unless there are any secret compartments here, you doubt you could find anything worthwhile. There are four doors, all labeled. What is this person's deal with labeling rooms?");
                     gameState.corridorSeen = true;
@@ -545,7 +561,6 @@
         else if (dest === "office") {
             if (gameState.officeUnlocked && ["bedroom", "office"].includes(gameState.room)) {
                 gameState.room = "office";
-                hideButton("Get rope");//crutch
                 print("You moved to the office.");
                 if (!gameState.officeSeen) {
                     print("When you enter the room, the first things you notice are the strong smell of dust and mountains of papers scattered about. Many of them seem to be personal documents of various different people... There is also a variety of equipment for hunting and fishing. No guns though, sadly. There are no doors except for the one you entered through.");

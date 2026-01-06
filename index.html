@@ -127,6 +127,7 @@
         </div>
       </div>
     </div>
+    <p>(If it doesn't look like much work was done on this website, this is because instead of html, most of the work was done fixing the javascript code so that it acts almost exactly as the original java code.)</p>
     <script>
     // --- GAME VARIABLES (STATE) ---
     let gameState = {
@@ -627,19 +628,10 @@
     function handleMovement(dest) {
         dest = dest.toLowerCase();
         
-        // Boilerplate movement logic
-        if (dest === "stay") {
-             print("You stayed in the same room.\n");
-             return;
-        }
-
-        let moved = false;
-        
         if (dest === "bedroom") {
             if (["corridor", "office", "bedroom"].includes(gameState.room)) {
                 gameState.room = "bedroom";
                 print("You moved to the bedroom.");
-                moved = true;
                 hideAllMovement();
                 showButton("Corridor");
                 if(gameState.officeUnlocked) showButton("Office");
@@ -653,7 +645,6 @@
                     print("The corridor is dark but not too long. Surprisingly empty too. Unless there are any secret compartments here, you doubt you could find anything worthwhile. There are four doors, all labeled. What is this person's deal with labeling rooms?");
                     gameState.corridorSeen = true;
                 }
-                moved = true;
                 hideAllMovement();
                 showButton("Bedroom");
                 showButton("Kitchen");
@@ -662,14 +653,13 @@
             }
         }
         else if (dest === "office") {
-            if (gameState.officeUnlocked && ["bedroom", "office"].includes(gameState.room)) {
+            if (gameState.officeUnlocked && gameState.room==="bedroom") {
                 gameState.room = "office";
                 print("You moved to the office.");
                 if (!gameState.officeSeen) {
                     print("When you enter the room, the first things you notice are the strong smell of dust and mountains of papers scattered about. Many of them seem to be personal documents of various different people... There is also a variety of equipment for hunting and fishing. No guns though, sadly. There are no doors except for the one you entered through.");
                     gameState.officeSeen = true;
                 }
-                moved = true;
                 hideAllMovement();
                 showButton("Bedroom");
             }
@@ -682,7 +672,6 @@
                     print("Mounted animal heads. So many of them. You don't think there is an inch of a wall that doesn't have one or some other kind of hunting trophy. A few cabinets are placed haphazardly around the room, as well as pedestals with full-body taxidermied animals. Even the chandelier is made of deer antlers. You can't tell if the host absolutely loves or hates animals, but they seem to feel very strongly about it.");
                     gameState.trophySeen = true;
                 }
-                moved = true;
                 hideAllMovement();
                 showButton("Corridor");
             }
@@ -695,7 +684,6 @@
                     print("A normal kitchen - fridge, counters, a sink, some cabinets. There is a strong smell of raw meat, so you doubt you will find anything else here.");
                     gameState.kitchenSeen = true;
                 }
-                moved = true;
                  hideAllMovement();
                  showButton("Corridor");
              }
@@ -709,7 +697,6 @@
                   if(gameState.section===2) print("You try the handle of the front door. It's locked. Sadly, it seems your captor actually does have some sense in them. You push a chair up against it. Just in case.\n");
                   gameState.entranceSeen = true;
                 }
-                moved = true;
                 hideAllMovement();
                 showButton("Corridor");
                 if(gameState.entranceUnlocked) showButton("Outside");
@@ -722,14 +709,11 @@
                 gameState.reachedExit = true;
                 gameState.section = 3;
                 hideAllMovement();
-                initSection3();
+                initSection4();
                 return;
             }
         }
 
-        if (!moved) {
-            print("Can't go there right now.");
-        }
         updateButtons();
     }
 

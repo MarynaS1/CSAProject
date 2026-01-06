@@ -637,21 +637,21 @@
             print("Office unlocked.");
             gameState.officeUnlocked = true;
             showButton("Office");
-            gameState.keys.splice("office key");
+            gameState.keys.splice(gameState.keys.indexOf("office key"));
         } else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) {
             print("Trophy room unlocked.");
             gameState.trophyUnlocked = true;
             showButton("Trophy room");
-            gameState.keys.splice("trophy room key");
+            gameState.keys.splice(gameState.keys.indexOf("trophy room key"));
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
-            gameState.keys.splice("firearm locker key");
+            gameState.keys.splice(gameState.keys.indexOf("firearm locker key"));
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;
             showButton("Outside");
-            gameState.keys.splice("entrance key");
+            gameState.keys.splice(gameState.keys.indexOf("entrance key"));
         } else {
             print("Nothing to unlock.");
         }

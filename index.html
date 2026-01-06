@@ -661,6 +661,7 @@
         }
         gameState.makingTrap = false;
         hideAllTraps();
+    }
     function initSection3() {
         if (!gameState.reachedExit) {
             gameState.entranceUnlocked=true;
@@ -683,6 +684,7 @@
             print("You escaped the house successfully!");
             print("Final Survival Points: " + gameState.survivalPoints);
         }
+    }
     function hostTurn() {
       if(gameState.hostStall===true){
         print("The host is stalled. They will not act right now.");

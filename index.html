@@ -103,6 +103,8 @@
           <input type="button" id="Hide" onclick="buttonInput('Hide')" value="Hide">
           <input type="button" id="Wait" onclick="buttonInput('Wait')" value="Wait">
           <input type="button" id="Attack" onclick="buttonInput('Attack')" value="Attack">
+
+          <input type="button" id="Play again" onclick="buttonInput('Play again')" value="Play again">
         </div>
         <p id="movementText">Movement:</p>
         <div class="choices">
@@ -206,6 +208,7 @@
         // Init Section 1
         gameState.inventory = [];
         gameState.keys = [];
+        gameState.section=1;
         print("You wake up in an unfamiliar shack. You don't remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("1. Look around\n2. Examine yourself\n");
         hideButton("Look");
@@ -219,7 +222,8 @@
         hideButton("keysText");
         hideButton("Hide");
         hideButton("Wait");
-        hideButton("Attack");      
+        hideButton("Attack");
+        hideButton("Play again");
         hideAllMovement();
         hideAllTraps();
     }
@@ -325,7 +329,7 @@
           if(gameState.injuries>5){
             print("\nEverything hurts... You've been hit too many times. Your vision darkens...");
             print("(You lost... Try again?)");
-            //playAgain();
+            playAgain();
           }
           else if(gameState.playerActions===0){
             hostTurn();
@@ -362,6 +366,9 @@
             /*else if(input === "Attack"){
               
             }*/
+            else if(input === "Play again"){
+              startGame();
+            }
             else {
                 print("Not an option");
             }
@@ -610,15 +617,20 @@
         if (gameState.room === "bedroom" && gameState.keys.includes("office key")) {
             print("Office unlocked.");
             gameState.officeUnlocked = true;
+            updateButtons();
         } else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) {
             print("Trophy room unlocked.");
             gameState.trophyUnlocked = true;
+            updateButtons();
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
+            updateButtons();
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;
+            updateButtons();
+            
         } else {
             print("Nothing to unlock.");
         }
@@ -661,6 +673,7 @@
         }
         gameState.makingTrap = false;
         hideAllTraps();
+        hideButton("trapText");
     }
     function initSection3() {
         if (!gameState.reachedExit) {
@@ -677,6 +690,9 @@
             showButton("Hide");
             showButton("Wait");
             showButton("Attack");
+            hideButton("Look");
+            hideButton("Trap");
+            hideButton("(Action descriptions)");
             print("(Tutorial: You start before the host. On your turn, you can use two available actions before the host, including moving to a different room (Your options have changed. To see the new actions, press the (Action descriptions) button). Either reach the entrance room and try your chances at surviving outside with what you have, or fight the host. If you manage to defeat them, you are guaranteed to survive the wilderness.");
             print("If the host notices you being in the same room as them, they will injure you. Injuries lower your chances of traversing the wilderness alive, but you get one more action immediately after receiving one. Talk about adrenaline!)");
         } else {
@@ -754,9 +770,19 @@
       hideButton("Use nothing");
       hideButton("Cancel");
     }
+    function playAgain(){
+      hideAllMovement();
+      hideButton("Hide");
+      hideButton("Wait");
+      hideButton("Attack");
+      print("Play again?");
+      showButton("Play again");
+      
+    }
+      
     // Start
     startGame();
-
+    
 </script>
   </body>
 </html>

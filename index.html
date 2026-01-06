@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!--To-do: attack, section 4-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Text game</title>
@@ -174,9 +173,12 @@
         hostRoomId: -1,
         hostStall: false,
         hostRepeat: false,
+        hostHealth: 10,
         injuries: 0,
         hiding: false,
         rifleUsed: false,
+        sharpKnifeEquipped: false,
+        smallKnifeEquipped: false,
     };
 
     // --- UTILITY FUNCTIONS ---
@@ -304,10 +306,12 @@
                     print("You cut the rope with the sharp knife.");
                     updateInventory("rope");
                     gameState.time -= 1;
+                    gameState.survivalPoints+=2;
                 } else {
                     print("You cut the rope with the small knife.");
                     updateInventory("rope");
                     gameState.time -= 5;
+                    gameState.survivalPoints+=2;
                 }
                 hideButton("Get rope");
                 showButton("Get firewood");
@@ -316,6 +320,7 @@
                 print("You tied the firewood together with the rope. Now you can carry it.");
                 updateInventory("firewood");
                 hideButton("Get firewood");
+                gameState.survivalPoints++;
                 
             }
             else if (input === "(Action descriptions)"){
@@ -366,9 +371,64 @@
                 print("You wait.");
                 gameState.playerActions--;
             }
-            /*else if(input === "Attack"){
-              
-            }*/
+            else if(input === "Attack"){
+              if(gameState.room===(gameState.hostRoom)){
+              if(gameState.rifleUsed===false && gameState.inventory.includes("loaded rifle")){
+                print("\nYou take out the rifle. You didn't notice it before, but it is a single shot rifle. You can only shoot once.\nNevertheless you point it at the host and pull the trigger. In such a small range, you were practically guaranteed to hit.");
+                print("The host is greatly wounded. They are also stalled for one turn.");
+                gameState.hostHealth-=7;
+                gameState.rifleUsed=true;
+                gameState.playerActions-=1;
+              }
+              else if(gameState.inventory.includes("sharp knife")){
+                if (gamestate.sharpKnifeEquipped===false){
+                  print("\nYou pull out the sharp knife. It feels nice in your hand. You can't be sure you will hit the host but the chances are good.");
+                  gameState.sharpKnifeEquipped=true;
+                }
+                print("You use the knife and ");
+                if(Math.float(Math.random()*101)>=50){//50%chance
+                  print("manage to hit the host!");
+                  gameState.hostHealth-=3;
+                  if(gameState.hostHealth>0){
+                    print("\nThey are wounded.");
+                    gameState.playerActions--;
+                  }
+                  else{
+                    println("They stop moving.");
+                    initSection4();
+                  }
+                }
+                else{
+                  print("miss!");
+                  gameState.playerActions--;
+                }
+              }
+              else{
+                if (gameState.smallKnifeEquipped===false){
+                    print("\nYou pull out the small knife. It feels awkward in your hand. You can't be sure you will hit the host.");
+                    gameState.smallKnifeEquipped=true;
+                }
+                print("You use the knife and ");
+                if(Math.float(Math.random()*101)>=75){//25%chance
+                  print("manage to hit the host!");
+                  gameState.hostHealth-=2;
+                  if(gameState.hostHealth>0){
+                    print("\nThey are wounded.");
+                    gameState.playerActions--;
+                  }
+                  else{
+                    print("They stop moving.");
+                    initSection4();
+                  }
+                }
+                 else{
+                  print("miss!");
+                  gameState.playerActions--;
+                }
+              }
+            }
+            else print("\nNo one to attack.(no actions taken)");
+            }
             else if(input === "Play again"){
               startGame();
             }
@@ -467,7 +527,7 @@
                 print("You found bottled water and raw meat.");
                 if(gameState.inventory.includes("firewood")) {
                     print("You think you could cook it with the firewood you found.");
-                    gameState.survivalPoints += 2;
+                    gameState.survivalPoints += 3;
                 }
                 else print("The meat will be useless if you dont have any firewood to cook it on though. You think you found everything here.");
                 updateInventory("bottled water");
@@ -649,6 +709,7 @@
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
+            gameState.survivalPoints+=3;
             gameState.firearmUnlocked = true;
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
@@ -691,6 +752,7 @@
               removeItem(input);
               print("You used " + input + " for a trap.");
               gameState.time -= 3;
+              gameState.survivalPoints-=2;
           } else {
               print("You can't use this item.");
           }
@@ -721,10 +783,27 @@
             print("(Tutorial: You start before the host. On your turn, you can use two available actions before the host, including moving to a different room (Your options have changed. To see the new actions, press the (Action descriptions) button). Either reach the entrance room and try your chances at surviving outside with what you have, or fight the host. If you manage to defeat them, you are guaranteed to survive the wilderness.");
             print("If the host notices you being in the same room as them, they will injure you. Injuries lower your chances of traversing the wilderness alive, but you get one more action immediately after receiving one. Talk about adrenaline!)\n");
         } else {
-            print("\nCONGRATULATIONS!");
-            print("You escaped the house successfully!");
-            print("Final Survival Points: " + gameState.survivalPoints);
+            initSection4();
         }
+    }
+    function initSection4(){
+      if(gameState.hostHealth<=0){
+        print("You did it. The host is dead now... You gather everything that can be useful in their house and leave as soon as you can.\n")
+        gameState.survivalPoints=67;
+      }
+      print("You feel the crunch of snow beneath your feet. You start running. Each step takes you further away from the house, and into the unknown.\n");
+      if(Math.floor(Math.random()*101)<=((gameState.survivalPoints-gameState.injuries)*10)){
+        print("After some time, you take a break. The resources you gathered have been keeping you alive. For the next few days, you continue moving through the forest, and finally find a small populated town. You are safe now.\n");
+        print("(Congradulations! You won!)");
+        playAgain();
+      }
+      else{
+        print("After a day or so of walking, you realize you do not enough supplies for the next few days");
+        if(gameState.injuries>0) print(", and your injuries don't help either");
+        print(". You hope that maybe you'll find help sooner than you run out of them, but as the days go by and the resources dwindle there is nothing but trees and snow in sight. You do not have the energy to keep going.");
+        print("(You lost... Better luck next time!)");
+        playAgain();
+      }
     }
     function hostTurn() {
       if(gameState.hostStall===true){
@@ -800,6 +879,8 @@
       hideButton("Hide");
       hideButton("Wait");
       hideButton("Attack");
+      hideButton("movementText");
+      hideButton("trapText");
       print("Play again?");
       showButton("Play again");
       

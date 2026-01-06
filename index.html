@@ -309,6 +309,8 @@
                     updateInventory("rope");
                     gameState.time -= 5;
                 }
+                hideButton("Get rope");
+                showButton("Get firewood");
             }
             else if ((input === "Firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
                 print("You tied the firewood together with the rope. Now you can carry it.");

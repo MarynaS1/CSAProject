@@ -34,9 +34,8 @@
         border-color: gray;
         padding: 10px;
         max-width:50%;
-        max-height: 600px;
+        height: 600px;
         justify-content: space-around;
-        align-items:center;
         margin-top: 20px;
         flex-wrap: nowrap;
         flex-direction: row;
@@ -64,6 +63,7 @@
         display: flex;
         flex-direction: column;
         text-align: left;
+        flex-grow:2;
       }
       #output {
           flex-grow: 1;
@@ -80,12 +80,12 @@
     </style>
   </head>
   <body>
-    <p>(If it doesn't look like much work was done on this website, this is because instead of html, most of the work was done fixing the javascript code so that it acts almost exactly as the original java code.)</p>
     <div id="game">
       <div id="game-container">
         <div id="output"></div>
       </div>
       <div id="actions">
+        <p>(If it doesn't look like much work was done on this website, this is because instead of html, most of the work was done fixing the javascript code so that it acts almost exactly as the original java code.)</p>
         <p id="inventoryText">Inventory:</p>
         <div id="inventory"></div>
         <p id="keysText">Keys:</p>

@@ -315,6 +315,7 @@
             else if ((input === "Get firewood") && gameState.room === "bedroom" && gameState.inventory.includes("rope")) {
                 print("You tied the firewood together with the rope. Now you can carry it.");
                 updateInventory("firewood");
+                hideButton("Get firewood");
                 
             }
             else if (input === "(Action descriptions)"){
@@ -634,23 +635,23 @@
         if (gameState.room === "bedroom" && gameState.keys.includes("office key")) {
             print("Office unlocked.");
             gameState.officeUnlocked = true;
-            updateButtons();
+            showButton("Office");
         } else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) {
             print("Trophy room unlocked.");
             gameState.trophyUnlocked = true;
-            updateButtons();
+            showButton("Trophy room");
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
-            updateButtons();
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;
-            updateButtons();
-            
+            showButton("Outside");
         } else {
             print("Nothing to unlock.");
         }
+        hideButton("Unlock");
+        updateButtons();
     }
 
     function initTrap() {

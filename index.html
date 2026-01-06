@@ -343,7 +343,7 @@
                 print(actions);
             }
             else if(input === "Hide"){
-                if((room === "corridor")){
+                if((gameState.room === "corridor")){
                   print("Nowhere to hide here. (no actions taken)");
                 }
                 else{
@@ -605,12 +605,12 @@
              }
         }
         else if (dest === "entrance room") {
-            if (["corridor", "entrance"].includes(gameState.room)) {
+            if (gameState.room==="corridor") {
                 gameState.room = "entrance";
                 print("You moved to the entrance room.");
                 if (!gameState.entranceSeen) {
                   print("It is quite barren, but not the the same extent the corridor is. There are a few chairs, a table, and a chandelier at least. You notice that the only window in the room has a circular pattern of cracks on it, almost like a spiderweb. It seems it has been shot at once, and has turned out to be bullet proof. You think it is safe to assume that all of the other windows are reinforced too, meaning that the only exit is the door here.");
-                  print("You try the handle of the front door. It's locked. Sadly, it seems your captor actually does have some sense in them. You push a chair up against it. Just in case.\n");
+                  if(gameState.section===2) print("You try the handle of the front door. It's locked. Sadly, it seems your captor actually does have some sense in them. You push a chair up against it. Just in case.\n");
                   gameState.entranceSeen = true;
                 }
                 moved = true;

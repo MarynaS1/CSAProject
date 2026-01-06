@@ -636,17 +636,21 @@
             print("Office unlocked.");
             gameState.officeUnlocked = true;
             showButton("Office");
+            gameState.keys.splice("office key");
         } else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) {
             print("Trophy room unlocked.");
             gameState.trophyUnlocked = true;
             showButton("Trophy room");
+            gameState.keys.splice("trophy room key");
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
+            gameState.keys.splice("firearm locker key");
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;
             showButton("Outside");
+            gameState.keys.splice("entrance key");
         } else {
             print("Nothing to unlock.");
         }
@@ -711,7 +715,7 @@
             hideButton("Trap");
             hideButton("(Action descriptions)");
             print("(Tutorial: You start before the host. On your turn, you can use two available actions before the host, including moving to a different room (Your options have changed. To see the new actions, press the (Action descriptions) button). Either reach the entrance room and try your chances at surviving outside with what you have, or fight the host. If you manage to defeat them, you are guaranteed to survive the wilderness.");
-            print("If the host notices you being in the same room as them, they will injure you. Injuries lower your chances of traversing the wilderness alive, but you get one more action immediately after receiving one. Talk about adrenaline!)");
+            print("If the host notices you being in the same room as them, they will injure you. Injuries lower your chances of traversing the wilderness alive, but you get one more action immediately after receiving one. Talk about adrenaline!)\n");
         } else {
             print("\nCONGRATULATIONS!");
             print("You escaped the house successfully!");
@@ -720,12 +724,12 @@
     }
     function hostTurn() {
       if(gameState.hostStall===true){
-        print("The host is stalled. They will not act right now.");
+        print("The host is stalled. They will not act right now.\n");
         gameState.hostStall=false;
       }
       else{
         if (!(gameState.room===gameState.hostRoom)) {
-          print("You hear the host shuffle around the house...");
+          print("You hear the host shuffle around the house...\n");
           gameState.hostRoomId++;
           if(gameState.hostRoomId>9){
             gameState.hostRoomId=0;
@@ -733,27 +737,27 @@
           }
           gameState.hostRoom=gameState.hostPath[gameState.hostRoomId];
           if(gameState.trappedRooms.includes(gameState.hostRoom)){
-            print("The host set off a trap!");
+            print("The host set off a trap!\n");
             gameState.hostStall=true;
             gameState.trappedRooms=gameState.trappedRooms.splice(gameState.hostRoomId);
           }
         }
         if(gameState.room===gameState.hostRoom){
           if(gameState.hiding){
-            if(repeat===false) print("You manage to avoid the host. Their eyes don't fall on your hiding spot.");
+            if(repeat===false) print("You manage to avoid the host. Their eyes don't fall on your hiding spot.\n");
             else{
               if((Math.floor(Math.random()*50))>65){
-                print("Your hiding spot fails\n");
+                print("Your hiding spot fails.");
                 print("You are noticed and the figure quickly moves toward you and attacks you! You feel a burst of pain and adrenaline.(You gain an aditional action for 1 turn)\n");
                 gameState.playerActions+=1;
                 gameState.injuries+=1;
                 gameState.hiding=false;
               }
-              else print("You manage to avoid the host. Their eyes don't fall on your hiding spot.");
+              else print("You manage to avoid the host. Their eyes don't fall on your hiding spot.\n");
             }
           }
           else{
-            print("You are noticed and the figure quickly moves toward you and attacks you! You feel a burst of pain and adrenaline.(You gain an aditional action for 1 turn)");
+            print("You are noticed and the figure quickly moves toward you and attacks you! You feel a burst of pain and adrenaline.(You gain an aditional action for 1 turn)\n");
             gameState.playerActions+=1;
             gameState.injuries+=1;
           }

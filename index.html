@@ -212,6 +212,41 @@
         gameState.inventory = [];
         gameState.keys = [];
         gameState.section=1;
+        gameState.room= "bedroom";
+        gameState.time=0;
+        gameState.survivalPoints=0;
+        gameState.seenIntroOne= false;
+        gameState.seenIntroTwo= false;
+        gameState.bedroomCheck= 0;
+        gameState.officeCheck= 0;
+        gameState.trophyCheck= 0;
+        gameState.kitchenCheck= 0;
+        gameState.officeUnlocked= false;
+        gameState.trophyUnlocked= false;
+        gameState.entranceUnlocked= false;
+        gameState.firearmUnlocked= false;
+        
+        gameState.officeSeen= false;
+        gameState.corridorSeen= false;
+        gameState.kitchenSeen= false;
+        gameState.entranceSeen= false;
+        gameState.trophySeen= false;
+
+        gameState.makingTrap= false;
+        gameState.trappedRooms=[];
+        
+        gameState.reachedExit= false;
+        gameState.playerActions= 2;
+        gameState.hostRoom= "none";
+        gameState.hostRoomId= -1;
+        gameState.hostStall= false;
+        gameState.hostRepeat= false;
+        gameState.hostHealth= 10;
+        gameState.injuries= 0;
+        gameState.hiding= false;
+        gameState.rifleUsed= false;
+        gameState.sharpKnifeEquipped= false;
+        gameState.smallKnifeEquipped= false;
         print("You wake up in an unfamiliar shack. You don't remember much of the past few days - got drunk with a few friends and decided to wander into the woods to get some fresh air away from the campfire. You suppose someone found you and brought you here. You feel something restricting your wrist.\n");
         print("1. Look around\n2. Examine yourself\n");
         hideButton("Look");
@@ -229,6 +264,7 @@
         hideButton("Play again");
         hideAllMovement();
         hideAllTraps();
+        
     }
 
     // --- MAIN LOGIC ---
@@ -372,60 +408,60 @@
                 gameState.playerActions--;
             }
             else if(input === "Attack"){
-              if(gameState.room===(gameState.hostRoom)){
-              if(gameState.rifleUsed===false && gameState.inventory.includes("loaded rifle")){
-                print("\nYou take out the rifle. You didn't notice it before, but it is a single shot rifle. You can only shoot once.\nNevertheless you point it at the host and pull the trigger. In such a small range, you were practically guaranteed to hit.");
-                print("The host is greatly wounded. They are also stalled for one turn.");
-                gameState.hostHealth-=7;
-                gameState.rifleUsed=true;
-                gameState.playerActions--;
-              }
-              else if(gameState.inventory.includes("sharp knife")){
-                if (gamestate.sharpKnifeEquipped===false){
-                  print("\nYou pull out the sharp knife. It feels nice in your hand. You can't be sure you will hit the host but the chances are good.");
-                  gameState.sharpKnifeEquipped=true;
+              if(gameState.room===gameState.hostRoom){
+                if(gameState.rifleUsed===false && gameState.inventory.includes("loaded rifle")){
+                  print("\nYou take out the rifle. You didn't notice it before, but it is a single shot rifle. You can only shoot once.\nNevertheless you point it at the host and pull the trigger. In such a small range, you were practically guaranteed to hit.");
+                  print("The host is greatly wounded. They are also stalled for one turn.");
+                  gameState.hostHealth-=7;
+                  gameState.rifleUsed=true;
+                  gameState.playerActions--;
                 }
-                print("You use the knife and ");
-                if(Math.float(Math.random()*101)>=50){//50%chance
-                  print("manage to hit the host!");
-                  gameState.hostHealth-=3;
-                  if(gameState.hostHealth>0){
-                    print("\nThey are wounded.");
-                    gameState.playerActions--;
+                else if(gameState.inventory.includes("sharp knife")){
+                  if (gameState.sharpKnifeEquipped===false){
+                    print("\nYou pull out the sharp knife. It feels nice in your hand. You can't be sure you will hit the host but the chances are good.");
+                    gameState.sharpKnifeEquipped=true;
+                  }
+                  print("You use the knife and ");
+                  if(Math.float(Math.random()*101)>=50){//50%chance
+                    print("manage to hit the host!");
+                    gameState.hostHealth-=3;
+                    if(gameState.hostHealth>0){
+                      print("\nThey are wounded.");
+                      gameState.playerActions--;
+                    }
+                    else{
+                      println("They stop moving.");
+                      initSection4();
+                    }
                   }
                   else{
-                    println("They stop moving.");
-                    initSection4();
+                    print("miss!");
+                    gameState.playerActions--;
                   }
                 }
                 else{
-                  print("miss!");
-                  gameState.playerActions--;
-                }
-              }
-              else{
-                if (gameState.smallKnifeEquipped===false){
-                    print("\nYou pull out the small knife. It feels awkward in your hand. You can't be sure you will hit the host.");
-                    gameState.smallKnifeEquipped=true;
-                }
-                print("You use the knife and ");
-                if(Math.float(Math.random()*101)>=75){//25%chance
-                  print("manage to hit the host!");
-                  gameState.hostHealth-=2;
-                  if(gameState.hostHealth>0){
-                    print("\nThey are wounded.");
+                  if (gameState.smallKnifeEquipped===false){
+                      print("\nYou pull out the small knife. It feels awkward in your hand. You can't be sure you will hit the host.");
+                      gameState.smallKnifeEquipped=true;
+                  }
+                  print("You use the knife and ");
+                  if(Math.float(Math.random()*101)>=75){//25%chance
+                    print("manage to hit the host!");
+                    gameState.hostHealth-=2;
+                    if(gameState.hostHealth>0){
+                      print("\nThey are wounded.");
+                      gameState.playerActions--;
+                    }
+                    else{
+                      print("They stop moving.");
+                      initSection4();
+                    }
+                  }
+                   else{
+                    print("miss!");
                     gameState.playerActions--;
                   }
-                  else{
-                    print("They stop moving.");
-                    initSection4();
-                  }
                 }
-                 else{
-                  print("miss!");
-                  gameState.playerActions--;
-                }
-              }
             }
             else print("\nNo one to attack.(no actions taken)");
             }

@@ -274,7 +274,6 @@
 
             // Check Time
             if (gameState.time <= 0) {
-                print("\nIt seems you are out of time...");
                 gameState.section = 3;
                 initSection3();
                 return;
@@ -394,7 +393,7 @@
         showButton("inventoryText");
         showButton("keysText");
         print("\nSECTION 2: THE HOUSE\n");
-        gameState.time = Math.floor(Math.random() * 31) + 10;
+        gameState.time = Math.floor(Math.random() * 31) + 20;
         print("Now that you're not tied to the bed, you can gather your surrounding better. There are two doors leading out of the room. One of them is labeled \"Office\". It seems to be locked. The other is unlabeled and unlocked.\n");
         
         updateInventory("food");
@@ -716,8 +715,9 @@
             showButton("Wait");
             showButton("Attack");
             hideButton("Look");
-            hideButton("Trap");
+            hideButton("Place trap");
             hideButton("(Action descriptions)");
+            showButton("(Action descriptions)");//repositions the button
             print("(Tutorial: You start before the host. On your turn, you can use two available actions before the host, including moving to a different room (Your options have changed. To see the new actions, press the (Action descriptions) button). Either reach the entrance room and try your chances at surviving outside with what you have, or fight the host. If you manage to defeat them, you are guaranteed to survive the wilderness.");
             print("If the host notices you being in the same room as them, they will injure you. Injuries lower your chances of traversing the wilderness alive, but you get one more action immediately after receiving one. Talk about adrenaline!)\n");
         } else {

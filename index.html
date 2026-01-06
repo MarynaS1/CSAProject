@@ -153,6 +153,7 @@
         officeUnlocked: false,
         trophyUnlocked: false,
         entranceUnlocked: false,
+        firearmUnlocked: false,
         
         // Descriptions seen
         officeSeen: false,
@@ -503,20 +504,20 @@
         else hideButton("Get rope");
         if (gameState.bedroomCheck === 1 && gamestate.inventory.includes("rope") && (!(gameState.inventory.includes("firewood")))) showButton("Get firewood");
         else hideButton("Get firewood");
-        if (gameState.keys.includes("office key")) showButton("Unlock");
+        if (gameState.keys.includes("office key") && gameState.officeUnlocked===false) showButton("Unlock");
         else hideButton("Unlock");
       }
-      else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")){
+      else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key") && gameState.trophyUnlocked===false){
         showButton("Unlock");
         hideButton("Get rope");
         hideButton("Get firewood");
       }
-      else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1){
+      else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key") && gameState.trophyCheck === 1 && gameState.firearmUnlocked===false){
         showButton("Unlock");
         hideButton("Get rope");
         hideButton("Get firewood");
       }
-      else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")){
+      else if (gameState.room === "entrance" && gameState.keys.includes("entrance key") && gameState.entranceUnlocked===false){
         showButton("Unlock");
         hideButton("Get rope");
         hideButton("Get firewood");
@@ -649,6 +650,7 @@
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
+            gameState.firearmUnlocked = true;
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;

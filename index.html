@@ -339,7 +339,7 @@
             print("(You lost... Try again?)");
             playAgain();
           }
-          else if(gameState.playerActions===0){
+          else if(gameState.playerActions<=0){
             hostTurn();
           }
           else{
@@ -378,7 +378,7 @@
                 print("The host is greatly wounded. They are also stalled for one turn.");
                 gameState.hostHealth-=7;
                 gameState.rifleUsed=true;
-                gameState.playerActions-=1;
+                gameState.playerActions--;
               }
               else if(gameState.inventory.includes("sharp knife")){
                 if (gamestate.sharpKnifeEquipped===false){

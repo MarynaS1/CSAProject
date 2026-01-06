@@ -439,7 +439,12 @@
         }
         else if (gameState.room === "trophy") {
              if (gameState.trophyCheck === 0) {
-                  print("You have found a firearm locker, but you're goint to need to use a key in your actions to unlock it...");
+                  print("You have found a firearm locker, ")
+                  if(gameState.keys.includes("firearm locker key")){ 
+                    print("for which you luckily already have the key.");
+                    showButton("Unlock");//crutch
+                  }
+                  else print("but you're goint to need to use a key in your actions to unlock it...");
                   print("You have also found a taxidermied fox! Sure, not a very surprising find in this room, but something about it seems very... entrancing...");
                   print("After staring at it for a straight minute, you break out of it. Whatever this thing actually is, you think you can use it for a trap or distraction.\n");
                  updateInventory("taxidermied fox?");
@@ -637,21 +642,17 @@
             print("Office unlocked.");
             gameState.officeUnlocked = true;
             showButton("Office");
-            gameState.keys.splice(gameState.keys.indexOf("office key"));
         } else if (gameState.room === "corridor" && gameState.keys.includes("trophy room key")) {
             print("Trophy room unlocked.");
             gameState.trophyUnlocked = true;
             showButton("Trophy room");
-            gameState.keys.splice(gameState.keys.indexOf("trophy room key"));
         } else if (gameState.room === "trophy" && gameState.keys.includes("firearm locker key")) {
             print("Firearm locker unlocked. Inside is a loaded rifle. You pick up the rifle. You feel safer.");
             updateInventory("loaded rifle");
-            gameState.keys.splice(gameState.keys.indexOf("firearm locker key"));
         } else if (gameState.room === "entrance" && gameState.keys.includes("entrance key")) {
             print("Entrance door unlocked.");
             gameState.entranceUnlocked = true;
             showButton("Outside");
-            gameState.keys.splice(gameState.keys.indexOf("entrance key"));
         } else {
             print("Nothing to unlock.");
         }
